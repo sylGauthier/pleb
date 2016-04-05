@@ -33,9 +33,9 @@ static void mapDeleteEdge(void* edge, void* data)
 
 static void mapPrintEdge(void* edge, void* data)
 {
-    Vector* v = (Vector* data);
-    int to = 
-    printf(" -> %d\n", ((Edge*)edge)->to);
+    Vector* v = (Vector*) data;
+    int to = ((edge*) (vectorAt(v, *(int*) edge)))->to;
+    printf(" -> %d\n", to);
 }
 
 static void mapListEdgeId(void* edge, void* list)
@@ -112,7 +112,7 @@ void graphPrint(Graph* g)
     for (i = 0; i < g->nbNodes; i++)
     {
         printf("Node %d :\n", ((Node*)(g->nodes->data[i]))->ID);
-        //listMap(g->edges[*neighbours(g, i)], mapPrintEdge, NULL);
+        listMap(*neighbours(g, i), mapPrintEdge, NULL);
     }
 }
 

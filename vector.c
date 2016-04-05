@@ -38,7 +38,7 @@ void vectorMap(Vector vec, void (*mapfun)(void* elem, void* dataIn), void* data)
 void* vectorAt(Vector* v, int i)
 {
     if (i >= 0 && i < v->count)
-        return data[i];
+        return v->data[i];
     else
         return NULL;
 }
