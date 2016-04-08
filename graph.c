@@ -14,6 +14,7 @@ typedef struct Node
 typedef struct Edge
 {
     int ID;
+    int from;
     int to;
     void* attribute;
 } Edge;
@@ -78,6 +79,7 @@ int graphAddEdge(Graph* g, int fromID, int toID, void* attribute)
     Edge* e = malloc(sizeof(Edge));
 
     e->ID = eid;
+    e->from = fromID;
     e->to = toID;
     e->attribute = attribute;
 
@@ -98,6 +100,16 @@ List graphGetNeighbours(Graph* g, int ID)
 void* graphGetNodeAttribute(Graph* g, int nodeID)
 {
     return ((Node*) g->nodes->data[nodeID])->attribute;
+}
+
+int graphGetNodeFrom(Graph* g, int edgeID)
+{
+    return ((Edge*) vectorAt(g->edges, edgeID))->from;
+}
+
+int graphGetNodeTo(Graph* g, int edgeID)
+{
+    return ((Edge*) vectorAt(g->edges, edgeID))->to;
 }
 
 void* graphGetEdgeAttribute(Graph* g, int edgeID)

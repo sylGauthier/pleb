@@ -44,6 +44,10 @@ void* vectorAt(Vector* v, int i)
         else
             return NULL;
     }
+    else
+    {
+        return NULL;
+    }
 }
 
 void vectorFree(Vector* vec)

@@ -13,6 +13,9 @@ int graphAddEdge(Graph* g, int fromID, int toID, void* attribute);
 
 List graphGetNeighbours(Graph* g, int nodeID);
 void* graphGetNodeAttribute(Graph* g, int nodeID);
+
+int graphGetNodeFrom(Graph* g, int edgeID);
+int graphGetNodeTo(Graph* g, int edgeID);
 void* graphGetEdgeAttribute(Graph* g, int edgeID);
 
 void graphPrint(Graph* g);
