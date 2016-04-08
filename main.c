@@ -2,11 +2,6 @@
 
 #include "graph.h"
 
-void printList(void* elem, void* data)
-{
-    printf("%p: %d\n", elem, *((int*) elem));
-}
-
 int main()
 {
     Graph* G = graphNew();
