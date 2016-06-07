@@ -1,59 +1,46 @@
 #include <stdio.h>
 #include <string.h>
 
-#include "graph.h"
-
-struct nodeAttrib
-{
-    char name[100];
-};
-
-struct edgeAttrib
-{
-    char type[100];
-};
-
-void explainEdge(Graph* G, int eid)
-{
-    struct edgeAttrib* ea = graphGetEdgeAttribute(G, eid);
-
-    struct nodeAttrib* nf = graphGetNodeAttribute(G, graphGetNodeFrom(G, eid));
-    struct nodeAttrib* nt = graphGetNodeAttribute(G, graphGetNodeTo(G, eid));
-
-    printf("%s %s %s\n", nf->name, ea->type, nt->name);
-}
+#include "social_graph.h"
 
 int main()
 {
-    Graph* G = graphNew();
+    SocialGraph* SG = socialNew();
 
-    struct nodeAttrib node1;
+    struct identity node1;
     strcpy(node1.name, "Glandalf");
+    node1.phone = 1;
+    node1.address = 1000;
 
-    struct nodeAttrib node2;
+    struct skills sk1;
+    sk1.intelligence = 10;
+    sk1.emotionality = 1;
+
+    struct identity node2;
     strcpy(node2.name, "Frodo");
+    node2.phone = 2;
+    node2.address = 2000;
 
-    struct nodeAttrib node3;
+    struct skills sk2;
+    sk2.intelligence = 3;
+    sk2.emotionality = 6;
+
+    struct identity node3;
     strcpy(node3.name, "Gollum");
+    node3.phone = 3;
+    node3.address = 3000;
 
-    struct edgeAttrib edge1;
-    strcpy(edge1.type, "whispers sweet words to");
+    struct skills sk3;
+    sk3.intelligence = 6;
+    sk3.emotionality = 0;
 
-    int a = graphAddNode(G, &node1);
-    int b = graphAddNode(G, &node2);
-    int c = graphAddNode(G, NULL);
+    int a = socialAddNode(SG, node1, sk1);
+    int b = socialAddNode(SG, node2, sk2);
+    int c = socialAddNode(SG, node3, sk3);
 
-    int ab = graphAddEdge(G, a, b, &edge1);
+    socialPrintPeople(SG);
 
-    graphAddEdge(G, a, c, NULL);
-    graphAddEdge(G, b, c, NULL);
-    graphAddEdge(G, c, a, NULL);
-
-    graphPrint(G);
-
-    explainEdge(G, ab);
-
-    graphFree(G);
+    socialFree(SG);
 
     return 0;
 }
