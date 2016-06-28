@@ -47,6 +47,16 @@ int listSize(List l)
     return cpt;
 }
 
+static void freeCallback(void* elem, void* data)
+{
+    free(elem);
+}
+
+void listFlush(List l)
+{
+    listMap(l, freeCallback, NULL);
+}
+
 void listFree(List* l)
 {
     while (*l)
@@ -62,4 +72,26 @@ void listMap(List l, void (*mapfun)(void*, void*), void* data)
         mapfun(cursor->elem, data);
         cursor = cursor->next;
     }
+}
+
+int listIsIn(List l, void* elem, int (*equalFunction)(void*, void*))
+{
+    List cursor = l;
+
+    while (cursor)
+    {
+        if (equalFunction != NULL)
+        {
+            if (equalFunction(elem, cursor->elem))
+                return 1;
+        }
+        else
+        {
+            if (elem == cursor->elem)
+                return 1;
+        }
+        cursor = cursor->next;
+    }
+
+    return 0;
 }

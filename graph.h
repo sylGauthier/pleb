@@ -4,7 +4,28 @@
 #include "vector.h"
 #include "list.h"
 
-typedef struct Graph Graph;
+typedef struct Graph
+{
+    int nbNodes;
+    int nbEdges;
+    Vector* nodes;
+    Vector* edges;
+} Graph;
+
+typedef struct Node
+{
+    int ID;
+    List edges;
+    void* attribute;
+} Node;
+
+typedef struct Edge
+{
+    int ID;
+    int from;
+    int to;
+    void* attribute;
+} Edge;
 
 Graph* graphNew();
 

@@ -3,13 +3,23 @@
 
 #include "graph.h"
 
-typedef struct SocialGraph SocialGraph;
+enum _sex_
+{
+    MALE = 0,
+    FEMALE
+};
+
+typedef struct SocialGraph
+{
+    Graph* G;
+} SocialGraph;
 
 struct identity
 {
     int firstName;
     int lastName;
     int sex;
+    int age;
     int phone;
     int address;
     int email;
@@ -26,6 +36,7 @@ struct perception
 {
     int allegiance;
     int attachment;
+    int love;
 };
 
 struct nodeAttrib
@@ -37,6 +48,7 @@ struct nodeAttrib
 
 struct relationAttrib
 {
+    int edgeID;
     struct identity knowAbout;
     struct perception perc;
 };
@@ -44,7 +56,7 @@ struct relationAttrib
 SocialGraph* socialNew();
 
 int socialAddNode(SocialGraph* SG, struct nodeAttrib);
-int socialAddRelation(SocialGraph* SG, struct relationAttrib);
+int socialAddRelation(SocialGraph* SG, int nf, int nt, struct relationAttrib);
 
 void socialPrintPeople(SocialGraph* SG);
 

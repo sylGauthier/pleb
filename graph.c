@@ -4,29 +4,6 @@
 #include "graph.h"
 #include "vector.h"
 
-typedef struct Node
-{
-    int ID;
-    List edges;
-    void* attribute;
-} Node;
-
-typedef struct Edge
-{
-    int ID;
-    int from;
-    int to;
-    void* attribute;
-} Edge;
-
-struct Graph
-{
-    int nbNodes;
-    int nbEdges;
-    Vector* nodes;
-    Vector* edges;
-};
-
 static void mapDeleteEdge(void* edge, void* data)
 {
     free(edge);

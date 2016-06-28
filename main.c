@@ -2,43 +2,69 @@
 #include <string.h>
 
 #include "social_graph.h"
+#include "social_generation.h"
+#include "save_graph.h"
 
 int main()
 {
+    int nbPeople = 100;
     SocialGraph* SG = socialNew();
 
-    struct identity node1;
-    strcpy(node1.name, "Glandalf");
-    node1.phone = 1;
-    node1.address = 1000;
+   /* struct nodeAttrib node1;
+    node1.ID.firstName = 0;
+    node1.ID.lastName = 0;
+    node1.ID.sex = 0;
+    node1.ID.phone = 1;
+    node1.ID.address = 1000;
 
-    struct skills sk1;
-    sk1.intelligence = 10;
-    sk1.emotionality = 1;
+    node1.pers.intelligence = 10;
+    node1.pers.emotionality = 1;
 
-    struct identity node2;
-    strcpy(node2.name, "Frodo");
-    node2.phone = 2;
-    node2.address = 2000;
+    struct nodeAttrib node2;
+    node2.ID.firstName = 1;
+    node2.ID.lastName = 1;
+    node2.ID.sex = 0;
+    node2.ID.phone = 2;
+    node2.ID.address = 2000;
 
-    struct skills sk2;
-    sk2.intelligence = 3;
-    sk2.emotionality = 6;
+    node2.pers.intelligence = 3;
+    node2.pers.emotionality = 6;
 
-    struct identity node3;
-    strcpy(node3.name, "Gollum");
-    node3.phone = 3;
-    node3.address = 3000;
+    struct nodeAttrib node3;
+    node3.ID.firstName = 3;
+    node3.ID.lastName = 3;
+    node3.ID.sex = 3;
+    node3.ID.phone = 3;
+    node3.ID.address = 3000;
 
-    struct skills sk3;
-    sk3.intelligence = 6;
-    sk3.emotionality = 0;
+    node3.pers.intelligence = 6;
+    node3.pers.emotionality = 0;
 
-    int a = socialAddNode(SG, node1, sk1);
-    int b = socialAddNode(SG, node2, sk2);
-    int c = socialAddNode(SG, node3, sk3);
+    struct perception RPerc;
+    randPerc(&RPerc);
 
-    socialPrintPeople(SG);
+    struct identity RIdent;
+    randID(&RIdent);
+    
+    struct relationAttrib dontCare;
+    dontCare.edgeID = 0;
+    dontCare.knowAbout = RIdent;
+    dontCare.perc = RPerc;
+
+    int a = socialAddNode(SG, node1);
+    int b = socialAddNode(SG, node2);
+    int c = socialAddNode(SG, node3);
+
+    socialAddRelation(SG, 0, 1, dontCare);
+    socialAddRelation(SG, 0, 2, dontCare);
+    socialAddRelation(SG, 2, 1, dontCare);*/
+
+    generateActives(SG, nbPeople);
+    printf("Generated %d couples out of %d people\n", generateFamilies(SG), nbPeople);
+
+    //socialPrintPeople(SG);
+
+    saveGraph(SG->G, "test.graphml");
 
     socialFree(SG);
 
