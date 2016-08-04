@@ -2,14 +2,20 @@
 
 #include "save_graph.h"
 
+char* familyRelNames[10];
+
 static void writeHeader(FILE *f)
 {
     fprintf(f, "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
             "<graphml xmlns=\"http://graphml.graphdrawing.org/xmlns\""
             " xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n"
             "xsi:schemaLocation=\"http://graphml.graphdrawing.org/xmlns http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd\">\n"
-            "<key id=\"d0\" for=\"node\" attr.name=\"color\" attr.type=\"string\">\n"
-            "<default>yellow</default>\n</key>\n<key id=\"d1\" for=\"edge\" attr.name=\"weight\" attr.type=\"double\"/>\n"
+
+            //Attributes of nodes and edges
+            "<key id=\"d0\" for=\"node\" attr.name=\"color\" attr.type=\"string\">\n<default>yellow</default>\n</key>\n"
+            "<key id=\"d1\" for=\"node\" attr.name=\"age\" attr.type=\"int\"/>\n"
+            "<key id=\"d2\" for=\"edge\" attr.name=\"type\" attr.type=\"string\"/>\n"
+
             "<graph id=\"G\" edgedefault=\"directed\">\n");
 }
 
@@ -18,18 +24,33 @@ static void writeFooter(FILE *f)
     fprintf(f, "</graph>\n</graphml>");
 }
 
-static void writeNode(FILE *f, int ID)
+static void writeNode(FILE *f, struct nodeAttrib* na)
 {
-    fprintf(f, "<node id=\"n%d\">\n<data key=\"plop\">plip</data>\n</node>\n", ID);
+    fprintf(f, "<node id=\"n%d\">\n"
+            "<data key=\"d0\">blue</data>\n"
+            "<data key=\"d1\">%d</data>\n"
+            "</node>\n", na->nodeID, na->ID.age);
 }
 
-static void writeEdge(FILE *f, int ID, int from, int to)
+static void writeEdge(FILE *f, int ID, int from, int to, int type)
 {
-    fprintf(f, "<edge id=\"e%d\" source=\"n%d\" target=\"n%d\"/>\n", ID, from, to);
+    if (type != CHILD)
+        fprintf(f, "<edge id=\"e%d\" source=\"n%d\" target=\"n%d\">\n  <data key=\"d2\"> %s </data>\n</edge>\n", ID, from, to, familyRelNames[type]);
 }
 
-void saveGraph(Graph* G, const char* fileName)
+void saveGraph(SocialGraph* SG, const char* fileName)
 {
+    familyRelNames[0] = "NONE";
+    familyRelNames[1] = "GRANDPARENT";
+    familyRelNames[2] = "PARENT";
+    familyRelNames[3] = "COUPLE";
+    familyRelNames[4] = "SIBLING";
+    familyRelNames[5] = "CHILD";
+    familyRelNames[0] = "NONE";
+    familyRelNames[0] = "NONE";
+    familyRelNames[0] = "NONE";
+    familyRelNames[0] = "NONE";
+
     printf("Writing graph to %s\n", fileName);
     FILE* f = fopen(fileName, "w");
 
@@ -37,14 +58,16 @@ void saveGraph(Graph* G, const char* fileName)
 
     int i = 0;
 
-    for (i = 0; i < G->nbNodes; i++)
+    for (i = 0; i < SG->G->nbNodes; i++)
     {
-        writeNode(f, i);
+        struct nodeAttrib* na = graphGetNodeAttribute(SG->G, i);
+        writeNode(f, na);
     }
 
-    for (i = 0; i < G->nbEdges; i++)
+    for (i = 0; i < SG->G->nbEdges; i++)
     {
-        writeEdge(f, i, graphGetNodeFrom(G, i), graphGetNodeTo(G, i));
+        struct relationAttrib* ra = graphGetEdgeAttribute(SG->G, i);
+        writeEdge(f, i, graphGetNodeFrom(SG->G, i), graphGetNodeTo(SG->G, i), ra->familyRel);
     }
 
     writeFooter(f);

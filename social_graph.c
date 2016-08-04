@@ -47,7 +47,26 @@ int socialAddRelation(SocialGraph* SG, int nodeFrom, int nodeTo, struct relation
     }
 }
 
-void printPeopleCallback(void* attr, void* data)
+int socialIsMated(SocialGraph* SG, int n)
+{
+    List nbs = graphGetEdgesFrom(SG->G, n);
+
+    while (nbs)
+    {
+        int* edgeIndex = listPop(&nbs);
+        struct relationAttrib* ea = graphGetEdgeAttribute(SG->G, *edgeIndex);
+
+        if (ea->familyRel == COUPLE)
+        {
+            listFree(&nbs);
+            return graphGetNodeTo(SG->G, ea->edgeID);
+        }
+    }
+
+    return -1;
+}
+
+static void printPeopleCallback(void* attr, void* data)
 {
     struct nodeAttrib* na = attr;
     struct relationAttrib* ea = NULL;
@@ -79,6 +98,33 @@ void socialPrintPeople(SocialGraph* SG)
 {
     printf("Printing social graph...\n\n");
     graphMapNodes(SG->G, printPeopleCallback, SG);
+}
+
+static void buildAgePyramidCallback(void* attr, void* pyramid)
+{
+    int* pyr = pyramid;
+    struct nodeAttrib* na = attr;
+
+    pyr[na->ID.age]++;
+}
+
+void printAgePyramid(SocialGraph* SG)
+{
+    int pyramid[110] = {0};
+    int i = 0;
+
+    graphMapNodes(SG->G, buildAgePyramidCallback, pyramid);
+
+    for (i = 0; i < 110; i++)
+    {
+        printf("%2d : ", i);
+        int j = 0;
+        for (j = 0; j < pyramid[i]; j++)
+        {
+            printf("*");
+        }
+        printf("\n");
+    }
 }
 
 void freeCallback(void* attr, void* data)

@@ -9,7 +9,7 @@ void randPerc(struct perception* perc);
 
 int generateNode(SocialGraph* SG);
 
-void generateActives(SocialGraph* SG, int nb);
+void generatePeople(SocialGraph* SG, int nb);
 int generateFamilies(SocialGraph* SG);
 
 #endif

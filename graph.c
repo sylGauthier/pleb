@@ -28,7 +28,7 @@ static void mapListEdgeId(void* edge, void* list)
     listPush((List*) list, to);
 }
 
-List* neighbours(Graph* g, int nodeID)
+static List* neighbours(Graph* g, int nodeID)
 {
     return &(((Node*)(g->nodes->data[nodeID]))->edges);
 }
@@ -67,7 +67,22 @@ int graphAddEdge(Graph* g, int fromID, int toID, void* attribute)
     e->to = toID;
     e->attribute = attribute;
 
+    //printf("Adding edge: %d\n", eid);
+
     listPush(neighbours(g, fromID), &e->ID);
+    //printf("Neighbours of %d are now:\n", fromID);
+    //printIntList(*neighbours(g, fromID));
+
+    if (fromID == 5967)
+    {
+        printf("!! Edge index: %d\n", e->ID);
+        List l = NULL;
+        listCopy(*neighbours(g,fromID), &l);
+        int* a = listPop(&l);
+        printf("mm %d\n", *a);
+        free(a);
+        getc(stdin);
+    }
     vectorPush(g->edges, e);
     g->nbEdges ++;
 
@@ -99,18 +114,8 @@ int graphGetNodeTo(Graph* g, int edgeID)
 List graphGetEdgesFrom(Graph* g, int nodeID)
 {
     List l = NULL;
-    int i = 0;
-    int* id;
 
-    for (i = 0; i < g->edges->count; i++)
-    {
-        if (((Edge*) vectorAt(g->edges, i))->from == nodeID)
-        {
-            id = malloc(sizeof(int));
-            *id = ((Edge*) vectorAt(g->edges, i))->ID;
-            listPush(&l, id);
-        }
-    }
+    listCopy(*neighbours(g, nodeID), &l);
 
     return l;
 }
@@ -132,6 +137,11 @@ List graphGetEdgesTo(Graph* g, int nodeID)
     }
 
     return l;
+}
+
+int graphGetEdgeBetween(Graph* g, int nodeFrom, int nodeTo)
+{
+    List l = graphGetEdgesFrom(g, nodeFrom);
 }
 
 void* graphGetEdgeAttribute(Graph* g, int edgeID)
@@ -184,6 +194,11 @@ void graphPrint(Graph* g)
         printf("Node %d :\n", ((Node*)(g->nodes->data[i]))->ID);
         listMap(*neighbours(g, i), mapPrintEdge, g->edges);
     }
+}
+
+void graphPrintNeighbours(Graph* g, int nodeID)
+{
+    printIntList(*neighbours(g, nodeID));
 }
 
 void graphFree(Graph* g)

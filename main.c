@@ -59,12 +59,13 @@ int main()
     socialAddRelation(SG, 0, 2, dontCare);
     socialAddRelation(SG, 2, 1, dontCare);*/
 
-    generateActives(SG, nbPeople);
+    generatePeople(SG, nbPeople);
+    //printAgePyramid(SG);
     printf("Generated %d couples out of %d people\n", generateFamilies(SG), nbPeople);
 
     //socialPrintPeople(SG);
 
-    saveGraph(SG->G, "test.graphml");
+    saveGraph(SG, "test.graphml");
 
     socialFree(SG);
 

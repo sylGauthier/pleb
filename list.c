@@ -47,6 +47,18 @@ int listSize(List l)
     return cpt;
 }
 
+static void listcpyclbk(void* elem, void* data)
+{
+    List* l = data;
+    listPush(l, elem);
+    //printf("pl %d\n", *((int*)elem));
+}
+
+void listCopy(List l1, List* l2)
+{
+    listMap(l1, listcpyclbk, l2);
+}
+
 static void freeCallback(void* elem, void* data)
 {
     free(elem);
@@ -94,4 +106,14 @@ int listIsIn(List l, void* elem, int (*equalFunction)(void*, void*))
     }
 
     return 0;
+}
+
+static void printInt(void* elem, void* data)
+{
+    printf("%d\n", *(int*)elem);
+}
+
+void printIntList(List l)
+{
+    listMap(l, printInt, NULL);
 }

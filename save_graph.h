@@ -1,3 +1,3 @@
-#include "graph.h"
+#include "social_graph.h"
 
-void saveGraph(Graph* G, const char* fileName);
+void saveGraph(SocialGraph* SG, const char* fileName);

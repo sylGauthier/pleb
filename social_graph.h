@@ -9,6 +9,21 @@ enum _sex_
     FEMALE
 };
 
+enum _familyLink_
+{
+    NONE = 0,
+    GRANDPARENT,
+    PARENT,
+    COUPLE,
+    SIBLING,
+    CHILD,
+    GRANDCHILD,
+    UNCLE,
+    COUSIN,
+    NEPHEW
+};
+
+
 typedef struct SocialGraph
 {
     Graph* G;
@@ -18,6 +33,7 @@ struct identity
 {
     int firstName;
     int lastName;
+    int familyID;
     int sex;
     int age;
     int phone;
@@ -49,6 +65,7 @@ struct nodeAttrib
 struct relationAttrib
 {
     int edgeID;
+    int familyRel;
     struct identity knowAbout;
     struct perception perc;
 };
@@ -58,7 +75,11 @@ SocialGraph* socialNew();
 int socialAddNode(SocialGraph* SG, struct nodeAttrib);
 int socialAddRelation(SocialGraph* SG, int nf, int nt, struct relationAttrib);
 
+//Returns the ID of the soulmate or -1 if none
+int socialIsMated(SocialGraph* SG, int n);
+
 void socialPrintPeople(SocialGraph* SG);
+void printAgePyramid(SocialGraph* SG);
 
 void socialFree(SocialGraph* SG);
 

@@ -42,11 +42,13 @@ int graphGetNodeTo(Graph* g, int edgeID);
 
 List graphGetEdgesFrom(Graph* g, int nodeID);
 List graphGetEdgesTo(Graph* g, int nodeID);
+int graphGetEdgeBetween(Graph* g, int nodeFrom, int nodeTo);
 
 void graphMapNodes(Graph* g, void (*mapfun)(void* attr, void* dataIn), void* data);
 void graphMapEdges(Graph* g, void (*mapfun)(void* attr, void* dataIn), void* data);
 
 void graphPrint(Graph* g);
+void graphPrintNeighbours(Graph* g, int nodeID);
 
 void graphFree(Graph* g);
 
