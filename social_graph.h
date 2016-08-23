@@ -2,12 +2,7 @@
 #define SOCIAL_GRAPH_H
 
 #include "graph.h"
-
-enum _sex_
-{
-    MALE = 0,
-    FEMALE
-};
+#include "name_manager.h"
 
 enum _familyLink_
 {
@@ -26,6 +21,7 @@ enum _familyLink_
 
 typedef struct SocialGraph
 {
+    struct nameManager NM;
     Graph* G;
 } SocialGraph;
 

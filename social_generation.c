@@ -3,9 +3,26 @@
 
 #include "social_generation.h"
 
-void randID(struct identity* ID)
+//Simulates very approximately the french age pyramid of 2014
+static int randAge()
 {
-    *ID = (struct identity) {1,2,3,4,5,6,7};
+    int a = rand()%1001;
+
+    if (a <= 840)
+        return a / 12;
+    else
+    {
+        int r = (a*a*96*8 - (a*97)*1536*8 + 3675*1536*96)/(1536*96*8);
+        return r;
+    }
+}
+
+void randID(SocialGraph* SG, struct identity* ID)
+{
+    ID->age = randAge();
+    ID->sex = rand() % 2;
+
+    nameRandName(&(SG->NM), 0, ID->sex, &(ID->firstName), &(ID->lastName));
 }
 
 void randPers(struct personality* pers)
@@ -18,49 +35,8 @@ void randPerc(struct perception* perc)
     *perc = (struct perception) {1,2};
 }
 
-static void createChild(SocialGraph* SG, int p1, int p2, int childAge)
-{
-    struct nodeAttrib* np1 = ((struct nodeAttrib*)graphGetNodeAttribute(SG->G, p1));
-    struct nodeAttrib* np2 = ((struct nodeAttrib*)graphGetNodeAttribute(SG->G, p2));
-
-    struct nodeAttrib child;
-    struct relationAttrib childRA1;
-    struct relationAttrib childRA2;
-    struct relationAttrib childRA3;
-
-    child.ID.age = childAge;
-    child.ID.sex = rand() % 2;
-    child.ID.firstName = 3; //TODO
-    child.ID.lastName = 3;  //TODO
-    child.pers.intelligence = rand() % 4;
-    child.pers.emotionality = rand() % 7;
-    child.pers.sexuality = 0;
-
-    childRA1.knowAbout = np1->ID;
-    childRA1.perc.attachment = rand()%3 + 7;
-    childRA1.perc.allegiance = rand()%3 + 7;
-
-    childRA2.knowAbout = np2->ID;
-    childRA2.perc.attachment = rand()%3 + 7;
-    childRA2.perc.allegiance = rand()%3 + 7;
-
-    childRA3.knowAbout = child.ID;
-    childRA2.perc.attachment = rand()%3 + 7;
-    childRA2.perc.allegiance = rand()%3;
-
-    int childID = socialAddNode(SG, child);
-    printf("Added child %d, aged %d, of sex %d\n", childID, child.ID.age, child.ID.sex);
-    socialAddRelation(SG, childID, p1, childRA1);
-    socialAddRelation(SG, childID, p2, childRA2);
-    /*socialAddRelation(SG, p1, childID, childRA3);
-    socialAddRelation(SG, p2, childID, childRA3);*/
-}
-
 static void createCouple(SocialGraph* SG, int n1, int n2)
 {
-    struct nodeAttrib* np1 = ((struct nodeAttrib*)graphGetNodeAttribute(SG->G, n1));
-    struct nodeAttrib* np2 = ((struct nodeAttrib*)graphGetNodeAttribute(SG->G, n2));
-
     struct relationAttrib ra1;
     struct relationAttrib ra2;
 
@@ -83,24 +59,10 @@ static void createCouple(SocialGraph* SG, int n1, int n2)
 int generateNode(SocialGraph* SG)
 {
     struct nodeAttrib* na = malloc(sizeof(struct nodeAttrib));
-    randID(&na->ID);
+    randID(SG, &na->ID);
     randPers(&na->pers);
 
     return graphAddNode(SG->G, na);
-}
-
-//Simulates very approximately the french age pyramid of 2014
-static int randAge()
-{
-    int a = rand()%1001;
-
-    if (a <= 840)
-        return a / 12;
-    else
-    {
-        int r = (a*a*96*8 - (a*97)*1536*8 + 3675*1536*96)/(1536*96*8);
-        return r;
-    }
 }
 
 static int randBinom(int n)
@@ -115,11 +77,8 @@ void generatePeople(SocialGraph* SG, int nb)
 
     for (i = 0; i < nb; i++)
     {
-        randID(&na.ID);
+        randID(SG, &na.ID);
         randPers(&na.pers);
-
-        na.ID.age = randAge();
-        na.ID.sex = rand() % 2;
 
         socialAddNode(SG, na);
     }
@@ -152,6 +111,7 @@ static void affiliate(SocialGraph* SG, int childID, int parentID)
 static void integrateInSiblings(SocialGraph* SG, int childID, int parentID)
 {
     List l = graphGetEdgesFrom(SG->G, parentID);
+    struct nodeAttrib* newSib = graphGetNodeAttribute(SG->G, childID);
 
     //We search every other child of the parent...
     while (l)
@@ -164,20 +124,27 @@ static void integrateInSiblings(SocialGraph* SG, int childID, int parentID)
         {
             int i = 0;
 
+            struct nodeAttrib* curSib = graphGetNodeAttribute(SG->G, graphGetNodeTo(SG->G, ra->edgeID));
+
             for (i = 0; i < 2; i++)
             {
                 struct relationAttrib newra;
 
                 newra.familyRel = SIBLING;
-                newra.knowAbout = naParent->ID;
                 newra.perc.allegiance = rand()%4;
                 newra.perc.attachment = 5 + rand()%6;
                 newra.perc.love = 0;
 
                 if (i)
-                    socialAddRelation(SG, graphGetNodeTo(SG->G, ra->edgeID), childID, newra);
+                {
+                    newra.knowAbout = newSib->ID;
+                    socialAddRelation(SG, curSib->nodeID, childID, newra);
+                }
                 else
-                    socialAddRelation(SG, childID, graphGetNodeTo(SG->G, ra->edgeID), newra);
+                {
+                    newra.knowAbout = curSib->ID;
+                    socialAddRelation(SG, childID, curSib->nodeID, newra);
+                }
             }
         }
     }
@@ -196,6 +163,7 @@ static int canBeParent(SocialGraph* SG, int childID, int parentID)
 
     List l = graphGetEdgesFrom(SG->G, childID);
 
+    //To avoid having multiple unrelated parents
     while (l)
     {
         int* e = listPop(&l);
@@ -204,9 +172,31 @@ static int canBeParent(SocialGraph* SG, int childID, int parentID)
         //If the node already has a parent...
         if (ra->familyRel == PARENT)
         {
-            printf("Node already has parents\n");
             listFree(&l);
             return 0;
+        }
+    }
+
+    int m8 = socialIsMated(SG, childID);
+
+    //To avoid interbreeding...
+    if (m8 != -1) //If the child has a soulmate
+    {
+        l = graphGetEdgesFrom(SG->G, parentID);
+
+        //Well we better make sure it ain't one of his/her siblings...
+        while (l)
+        {
+            int* e = listPop(&l);
+            struct relationAttrib* ra = graphGetEdgeAttribute(SG->G, *e);
+
+            //If the current neighbour of the parent happens to be one of his/her child
+            //And if this child happens to be the soulmate of the current tested child...
+            if (ra->familyRel == CHILD && graphGetNodeTo(SG->G, *e) == m8)
+            {
+                listFree(&l);
+                return 0; //Youre goddamn right they can't be related, hell this isn't England.
+            }
         }
     }
 
@@ -239,7 +229,6 @@ int generateFamilies(SocialGraph* SG)
                 && na1->ID.age - randBinom(6) >= 18 && na2->ID.age - randBinom(6) >= 18
                 && socialIsMated(SG, j) == -1 && socialIsMated(SG, k) == -1)
         {
-            //printf("PLop\n");
             createCouple(SG, k, j);
             count++;
         }
@@ -249,27 +238,36 @@ int generateFamilies(SocialGraph* SG)
 
     printf("Creating families...\n");
 
-    int i = 0;
+    int k = 0;
     int j = 0;
 
     for (j = 0; j < 3; j++)
     {
-        for (i = 0; i < nbActives; i++)
+        for (k = 0; k < nbActives; k++)
         {
+            int i = rand() % nbActives;
             struct nodeAttrib* na = graphGetNodeAttribute(SG->G, i);
+            int count = 0;
 
-            int parentID = rand()%nbActives;
-            struct nodeAttrib* na2 = graphGetNodeAttribute(SG->G, parentID);
-
-            if (canBeParent(SG, i, parentID))
+            do
             {
-                int m8 = socialIsMated(SG, parentID);
-                affiliate(SG, i, parentID);
+                int parentID = rand()%nbActives;
+                struct nodeAttrib* na2 = graphGetNodeAttribute(SG->G, parentID);
 
-                //If the selected potential parent is in couple, we also affiliate his/her partner to the child
-                if (m8 != -1)
-                    affiliate(SG, i, m8);
-            }
+                if (canBeParent(SG, i, parentID))
+                {
+                    int m8 = socialIsMated(SG, parentID);
+
+                    integrateInSiblings(SG, i, parentID);
+                    affiliate(SG, i, parentID);
+
+                    //If the selected potential parent is in couple, we also affiliate his/her partner to the child
+                    if (m8 != -1)
+                        affiliate(SG, i, m8);
+                }
+
+                count++;
+            } while (na->ID.age <= 18 && count < 10); //Gives underage kids 10 times more chance to have parents...
         }
     }
 

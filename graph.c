@@ -67,22 +67,8 @@ int graphAddEdge(Graph* g, int fromID, int toID, void* attribute)
     e->to = toID;
     e->attribute = attribute;
 
-    //printf("Adding edge: %d\n", eid);
-
     listPush(neighbours(g, fromID), &e->ID);
-    //printf("Neighbours of %d are now:\n", fromID);
-    //printIntList(*neighbours(g, fromID));
 
-    if (fromID == 5967)
-    {
-        printf("!! Edge index: %d\n", e->ID);
-        List l = NULL;
-        listCopy(*neighbours(g,fromID), &l);
-        int* a = listPop(&l);
-        printf("mm %d\n", *a);
-        free(a);
-        getc(stdin);
-    }
     vectorPush(g->edges, e);
     g->nbEdges ++;
 

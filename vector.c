@@ -25,6 +25,19 @@ void vectorPush(Vector* vec, void* elem)
     vec->count ++;
 }
 
+void* vectorPop(Vector* vec)
+{
+    if (vec->count > 0)
+    {
+        vec->count --;
+        return vec->data[vec->count];
+    }
+    else
+    {
+        return NULL;
+    }
+}
+
 void vectorMap(Vector vec, void (*mapfun)(void* elem, void* dataIn), void* data)
 {
     int i = 0;
@@ -48,6 +61,16 @@ void* vectorAt(Vector* v, int i)
     {
         return NULL;
     }
+}
+
+static void vecFreeClbk(void* elem, void* data)
+{
+    free(elem);
+}
+
+void vectorFlush(Vector* vec)
+{
+    vectorMap(*vec, vecFreeClbk, NULL);
 }
 
 void vectorFree(Vector* vec)

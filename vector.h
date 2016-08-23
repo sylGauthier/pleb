@@ -12,10 +12,12 @@ typedef struct Vector Vector;
 
 Vector* vectorNew();
 void vectorPush(Vector*, void*);
+void* vectorPop(Vector*);
 void vectorMap(Vector vec, void (*mapfun)(void* elem, void* dataIn), void* data);
 
 void* vectorAt(Vector*, int);
 
+void vectorFlush(Vector*);
 void vectorFree(Vector*);
 
 #endif
