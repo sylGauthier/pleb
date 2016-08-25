@@ -13,12 +13,20 @@ int main()
 
     nameLoadFromFile(&(SG->NM), "firstNamesFRFemales.txt", FRENCH, FEMALE, FIRST_NAME);
     nameLoadFromFile(&(SG->NM), "firstNamesFRMales.txt", FRENCH, MALE, FIRST_NAME);
+    nameLoadFromFile(&(SG->NM), "lastNamesFR.txt", FRENCH, FEMALE, LAST_NAME);
     nameLoadFromFile(&(SG->NM), "lastNamesFR.txt", FRENCH, MALE, LAST_NAME);
-    /*generatePeople(SG, nbPeople);
+
+    int fir, las;
+
+    nameRandName(&(SG->NM), FRENCH, FEMALE, &fir, &las);
+
+    printf("Name: %s %s\n", nameGetFirstName(&(SG->NM), fir), nameGetLastName(&(SG->NM), las));
+
+    generatePeople(SG, nbPeople);
 
     printf("Generated %d couples out of %d people\n", generateFamilies(SG), nbPeople);
     printf("There are still %d underage orphans\n", statCountOrphanKids(SG));
-*/
+
     //saveGraph(SG, "test.graphml");
 
     socialFree(SG);

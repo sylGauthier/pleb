@@ -22,7 +22,7 @@ void randID(SocialGraph* SG, struct identity* ID)
     ID->age = randAge();
     ID->sex = rand() % 2;
 
-    nameRandName(&(SG->NM), 0, ID->sex, &(ID->firstName), &(ID->lastName));
+    nameRandName(&(SG->NM), FRENCH, ID->sex, &(ID->firstName), &(ID->lastName));
 }
 
 void randPers(struct personality* pers)
@@ -238,37 +238,36 @@ int generateFamilies(SocialGraph* SG)
 
     printf("Creating families...\n");
 
-    int k = 0;
+    int i = 0;
     int j = 0;
 
-    for (j = 0; j < 3; j++)
+    for (i = 0; i < nbActives; i++)
     {
-        for (k = 0; k < nbActives; k++)
+        //int i = rand() % nbActives;
+        struct nodeAttrib* na = graphGetNodeAttribute(SG->G, i);
+        int affiliated = 0;
+        int parentID = rand()%nbActives;
+
+        do
         {
-            int i = rand() % nbActives;
-            struct nodeAttrib* na = graphGetNodeAttribute(SG->G, i);
-            int count = 0;
+            struct nodeAttrib* na2 = graphGetNodeAttribute(SG->G, parentID);
 
-            do
+            if (canBeParent(SG, i, parentID))
             {
-                int parentID = rand()%nbActives;
-                struct nodeAttrib* na2 = graphGetNodeAttribute(SG->G, parentID);
+                int m8 = socialIsMated(SG, parentID);
 
-                if (canBeParent(SG, i, parentID))
-                {
-                    int m8 = socialIsMated(SG, parentID);
+                integrateInSiblings(SG, i, parentID);
+                affiliate(SG, i, parentID);
+                affiliated = 1;
 
-                    integrateInSiblings(SG, i, parentID);
-                    affiliate(SG, i, parentID);
+                //If the selected potential parent is in couple, we also affiliate his/her partner to the child
+                if (m8 != -1)
+                    affiliate(SG, i, m8);
+            }
+            //So we are sure we find a suitable parent for children in a finite time
+            parentID = (parentID + 1) % nbActives;
 
-                    //If the selected potential parent is in couple, we also affiliate his/her partner to the child
-                    if (m8 != -1)
-                        affiliate(SG, i, m8);
-                }
-
-                count++;
-            } while (na->ID.age <= 18 && count < 10); //Gives underage kids 10 times more chance to have parents...
-        }
+        } while (na->ID.age <= 18 && !affiliated); //That way there can't be any orphan child.
     }
 
     printf("%d colliding matches\n", collid);
