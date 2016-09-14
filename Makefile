@@ -1,6 +1,7 @@
 BUILD := build
 DEPS :=
 PREFIX :=
+LIBS := -lxml2
 
 SOURCES := $(wildcard *.c)
 OBJECTS := $(addprefix $(BUILD)/,$(notdir $(SOURCES:.c=.o)))
@@ -12,7 +13,7 @@ $(BUILD):
 	mkdir -p $@
 
 $(BUILD)/pleb: $(OBJECTS)
-	gcc -g -o $@ $(OBJECTS)
+	gcc -g -o $@ $(LIBS) $(OBJECTS)
 
 $(BUILD)/%.o:%.c
 	gcc -g -o $@ -Wall -c $<

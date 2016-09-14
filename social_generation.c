@@ -40,8 +40,16 @@ static void createCouple(SocialGraph* SG, int n1, int n2)
     struct relationAttrib ra1;
     struct relationAttrib ra2;
 
-    ra1.knowAbout = ((struct nodeAttrib*)graphGetNodeAttribute(SG->G, n2))->ID;
-    ra2.knowAbout = ((struct nodeAttrib*)graphGetNodeAttribute(SG->G, n1))->ID;
+    struct nodeAttrib* na1 = graphGetNodeAttribute(SG->G, n1);
+    struct nodeAttrib* na2 = graphGetNodeAttribute(SG->G, n2);
+ 
+    if (na1->ID.sex == MALE)
+        na2->ID.lastName = na1->ID.lastName;
+    else
+        na1->ID.lastName = na2->ID.lastName;
+    
+    ra1.knowAbout = na2->ID;
+    ra2.knowAbout = na1->ID;
 
     ra1.familyRel = COUPLE;
     ra2.familyRel = COUPLE;
@@ -88,6 +96,53 @@ static void affiliate(SocialGraph* SG, int childID, int parentID)
 {
     struct nodeAttrib* naParent = graphGetNodeAttribute(SG->G, parentID);
     struct nodeAttrib* naChild = graphGetNodeAttribute(SG->G, childID);
+
+    //Here we propagate the name through all the generations starting with the
+    //child who's being affiliated
+    List progeny = NULL;
+
+    int* ch = malloc(sizeof(int));
+    *ch = childID;
+
+    listPush(&progeny, ch);
+
+    while (progeny)
+    {
+        int* cur = listPop(&progeny);
+        int m8 = socialIsMated(SG, *cur);
+        struct nodeAttrib* naCur = graphGetNodeAttribute(SG->G, *cur);
+
+        if (m8 == -1 || naChild->ID.sex == MALE)
+        {
+            naCur->ID.lastName = naParent->ID.lastName;
+
+            if (m8 != -1)
+            {
+                struct nodeAttrib* naWife = graphGetNodeAttribute(SG->G, m8);
+                naWife->ID.lastName = naCur->ID.lastName;
+            }
+
+            //TODO here, update knowAbout
+        }
+
+        List relations = graphGetEdgesFrom(SG->G, *cur);
+
+        //We add all children of the current child to update their name.
+        while (relations)
+        {
+            int curEdge = *((int*) listPop(&relations));
+            struct relationAttrib* ra = graphGetEdgeAttribute(SG->G, curEdge);
+
+            if (ra->familyRel == CHILD)
+            {
+                int* e = malloc(sizeof(int));
+                *e = graphGetNodeTo(SG->G, curEdge);
+                listPush(&progeny, e);
+            }
+        }
+
+        free(cur);
+    }
 
     struct relationAttrib childToParent;
     struct relationAttrib parentToChild;
@@ -239,7 +294,7 @@ int generateFamilies(SocialGraph* SG)
     printf("Creating families...\n");
 
     int i = 0;
-    int j = 0;
+    //int j = 0;
 
     for (i = 0; i < nbActives; i++)
     {
@@ -250,8 +305,6 @@ int generateFamilies(SocialGraph* SG)
 
         do
         {
-            struct nodeAttrib* na2 = graphGetNodeAttribute(SG->G, parentID);
-
             if (canBeParent(SG, i, parentID))
             {
                 int m8 = socialIsMated(SG, parentID);

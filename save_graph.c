@@ -15,6 +15,8 @@ static void writeHeader(FILE *f)
             "<key id=\"d0\" for=\"node\" attr.name=\"color\" attr.type=\"string\">\n<default>yellow</default>\n</key>\n"
             "<key id=\"d1\" for=\"node\" attr.name=\"age\" attr.type=\"int\"/>\n"
             "<key id=\"d2\" for=\"edge\" attr.name=\"type\" attr.type=\"string\"/>\n"
+            "<key id=\"d3\" for=\"node\" attr.name=\"firstName\" attr.type=\"string\"/>\n"
+            "<key id=\"d4\" for=\"node\" attr.name=\"lastName\" attr.type=\"string\"/>\n"
 
             "<graph id=\"G\" edgedefault=\"directed\">\n");
 }
@@ -24,12 +26,16 @@ static void writeFooter(FILE *f)
     fprintf(f, "</graph>\n</graphml>");
 }
 
-static void writeNode(FILE *f, struct nodeAttrib* na)
+static void writeNode(FILE *f, SocialGraph* SG, int ID)
 {
+    struct nodeAttrib* na = graphGetNodeAttribute(SG->G, ID);
+
     fprintf(f, "<node id=\"n%d\">\n"
             "<data key=\"d0\">blue</data>\n"
             "<data key=\"d1\">%d</data>\n"
-            "</node>\n", na->nodeID, na->ID.age);
+            "<data key=\"d3\">%s</data>\n"
+            "<data key=\"d4\">%s</data>\n"
+            "</node>\n", na->nodeID, na->ID.age, nameGetFirstName(&(SG->NM), na->ID.firstName), nameGetLastName(&(SG->NM), na->ID.lastName));
 }
 
 static void writeEdge(FILE *f, int ID, int from, int to, int type)
@@ -60,8 +66,7 @@ void saveGraph(SocialGraph* SG, const char* fileName)
 
     for (i = 0; i < SG->G->nbNodes; i++)
     {
-        struct nodeAttrib* na = graphGetNodeAttribute(SG->G, i);
-        writeNode(f, na);
+        writeNode(f, SG, i);
     }
 
     for (i = 0; i < SG->G->nbEdges; i++)

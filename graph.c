@@ -21,12 +21,12 @@ static void mapListNodesIdTo(void* edge, void* list)
     listPush((List*) list, &(((Edge*) edge)->to));
 }
 
-static void mapListEdgeId(void* edge, void* list)
+/*static void mapListEdgeId(void* edge, void* list)
 {
     int* to = malloc(sizeof(int));
     *to = ((Edge*) edge)->to;
     listPush((List*) list, to);
-}
+}*/
 
 static List* neighbours(Graph* g, int nodeID)
 {
@@ -127,7 +127,8 @@ List graphGetEdgesTo(Graph* g, int nodeID)
 
 int graphGetEdgeBetween(Graph* g, int nodeFrom, int nodeTo)
 {
-    List l = graphGetEdgesFrom(g, nodeFrom);
+    //List l = graphGetEdgesFrom(g, nodeFrom);
+    return 0;
 }
 
 void* graphGetEdgeAttribute(Graph* g, int edgeID)
