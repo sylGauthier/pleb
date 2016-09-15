@@ -30,6 +30,7 @@ int main()
     communityNewManager(&CM);
 
     communityLoadTemplatesFromFile(&CM, "plop.xml");
+    communityPrintTemplates(&CM);
 
     communityFree(&CM);
 

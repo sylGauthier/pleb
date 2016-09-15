@@ -18,12 +18,18 @@ struct position
 struct community
 {
     int ID;
+
+    int nbPositions;
     struct position positions[20];
+
     char genericName[20];
     char specificName[20];
 
     //How many people in the network for one community of this type
     int quota;
+
+    //If quota = 0, this indicates the absolute number of this kind of community
+    int number;
 };
 
 struct communityManager
@@ -33,6 +39,8 @@ struct communityManager
 };
 
 void communityNewManager(struct communityManager* CM);
+
 int communityLoadTemplatesFromFile(struct communityManager* CM, char* filename);
+void communityPrintTemplates(struct communityManager* CM);
 
 void communityFree(struct communityManager* CM);

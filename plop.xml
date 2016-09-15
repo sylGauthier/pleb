@@ -1,0 +1,33 @@
+<communities>
+    <community genericName="plop" quota="1000">
+        <position
+            name="chef"
+            hierarchy="1"
+            nbPeople="1"
+            salary="10000"
+            minAge="35"
+            maxAge="100"
+            timeRatio="60"
+        />
+
+        <position
+            name="employé"
+            hierarchy="2"
+            nbPeople="10"
+            salary="1000"
+            minAge="25"
+            maxAge="100"
+            timeRatio="70"
+        />
+
+        <position
+            name="stagiaire"
+            hierarchy="50000"
+            nbPeople="2"
+            salary="0"
+            minAge="16"
+            maxAge="25"
+            timeRatio="100"
+        />
+    </community>
+</communities>
