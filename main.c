@@ -26,13 +26,15 @@ int main()
 
     socialFree(SG);*/
 
-    struct communityManager CM;
-    communityNewManager(&CM);
+    struct communityManager* CM = communityNewManager();
 
-    communityLoadTemplatesFromFile(&CM, "plop.xml");
-    communityPrintTemplates(&CM);
+    communityLoadTemplatesFromFile(CM, "plop.xml");
+    communityPrintTemplates(CM);
 
-    communityFree(&CM);
+    communityGenerateFromTemplates(CM, 100000);
+    //communityPrintCommunities(CM);
+
+    communityFree(CM);
 
     return 0;
 }

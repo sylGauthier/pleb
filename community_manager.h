@@ -15,6 +15,12 @@ struct position
     char name[25];
 };
 
+enum COMMUNITY_TYPE
+{
+    WORK,
+    LEISURE
+};
+
 struct community
 {
     int ID;
@@ -30,6 +36,8 @@ struct community
 
     //If quota = 0, this indicates the absolute number of this kind of community
     int number;
+
+    int type;
 };
 
 struct communityManager
@@ -38,9 +46,14 @@ struct communityManager
     Vector* templates;
 };
 
-void communityNewManager(struct communityManager* CM);
+struct communityManager*  communityNewManager();
 
 int communityLoadTemplatesFromFile(struct communityManager* CM, char* filename);
 void communityPrintTemplates(struct communityManager* CM);
+void communityPrintCommunities(struct communityManager* CM);
+
+//Note: all we need to create empty, "abstract" communities is the number of people in
+//the network. Then we "fill" those communities with people in social_generation
+void communityGenerateFromTemplates(struct communityManager* CM, int nbPeople);
 
 void communityFree(struct communityManager* CM);
