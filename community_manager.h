@@ -15,6 +15,22 @@ struct position
     char name[25];
 };
 
+struct positionTemplate
+{
+    int hierarchy;
+    int nbPeopleMax, nbPeopleMin;
+    int salaryMax, salarMin;
+
+    int minAge;
+    int maxAge;
+
+    //Percentage of time this position occupies in the node's schedule
+    int timeRatioMin;
+    int timeRatioMax;
+
+    char name[25];
+};
+
 enum COMMUNITY_TYPE
 {
     WORK,
@@ -30,6 +46,16 @@ struct community
 
     char genericName[20];
     char specificName[20];
+
+    int type;
+};
+
+struct communityTemplate
+{
+    int nbPositions;
+    struct positionTemplate positions[20];
+
+    char genericName[20];
 
     //How many people in the network for one community of this type
     int quota;
@@ -48,7 +74,7 @@ struct communityManager
 
 struct communityManager*  communityNewManager();
 
-int communityLoadTemplatesFromFile(struct communityManager* CM, char* filename);
+int communityLoadCommunitiesFromFile(struct communityManager* CM, char* filename);
 void communityPrintTemplates(struct communityManager* CM);
 void communityPrintCommunities(struct communityManager* CM);
 

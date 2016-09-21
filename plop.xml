@@ -193,20 +193,10 @@
         <position
             name="employee"
             hierarchy="2"
-            nbPeople="30"
-            salary="2000"
+            nbPeople="3"
+            salary="1500"
             minAge="30"
             maxAge="75"
-            timeRatio="50"
-            />
-
-        <position
-            name="student"
-            hierarchy="5"
-            nbPeople="3000"
-            salary="0"
-            minAge="18"
-            maxAge="25"
             timeRatio="50"
             />
     </community>

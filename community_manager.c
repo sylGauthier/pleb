@@ -16,6 +16,24 @@ struct communityManager* communityNewManager()
     return CM;
 }
 
+static void parseDoubleArg(char* arg, int* n1, int* n2)
+{
+    char* end1 = arg;
+    char* end2 = NULL;
+
+    *n1 = strtol(arg, &end1, 10);
+
+    if (*end1 != '\0')
+    {
+        *n2 = strtol(end1 + 1, &end2, 10);
+
+        if (end2 == end1)
+            *n2 = *n1;
+    }
+    else
+        *n2 = *n1;
+}
+
 static void parsePosition(xmlDocPtr doc, xmlNodePtr cur, struct community* com, int positionIndex)
 {
     xmlChar* attr = xmlGetProp(cur, (xmlChar*) "hierarchy");
@@ -23,11 +41,11 @@ static void parsePosition(xmlDocPtr doc, xmlNodePtr cur, struct community* com, 
     xmlFree(attr);
 
     attr = xmlGetProp(cur, (xmlChar*) "nbPeople");
-    com->positions[positionIndex].nbPeople = strtol((char*) attr, NULL, 10);
+    parseDoubleArg((char*) attr, &(com->positions[positionIndex].nbPeopleMin), &(com->positions[positionIndex].nbPeopleMax));
     xmlFree(attr);
 
     attr = xmlGetProp(cur, (xmlChar*) "salary");
-    com->positions[positionIndex].salary = strtol((char*) attr, NULL, 10);
+    parseDoubleArg((char*) attr, &(com->positions[positionIndex].salaryMin), &(com->positions[positionIndex].salaryMax));
     xmlFree(attr);
 
     attr = xmlGetProp(cur, (xmlChar*) "minAge");
@@ -39,7 +57,7 @@ static void parsePosition(xmlDocPtr doc, xmlNodePtr cur, struct community* com, 
     xmlFree(attr);
 
     attr = xmlGetProp(cur, (xmlChar*) "timeRatio");
-    com->positions[positionIndex].timeRatio = strtol((char*) attr, NULL, 10);
+    parseDoubleArg((char*) attr, &(com->positions[positionIndex].timeRatioMin), &(com->positions[positionIndex].timeRatioMax));
     xmlFree(attr);
 
     attr = xmlGetProp(cur, (xmlChar*) "name");
@@ -49,7 +67,7 @@ static void parsePosition(xmlDocPtr doc, xmlNodePtr cur, struct community* com, 
 
 static void parseCommunity(xmlDocPtr doc, xmlNodePtr cur, struct communityManager* CM)
 {
-    struct community* newTemplate = malloc(sizeof(struct community));
+    struct communityTemplate* newTemplate = malloc(sizeof(struct communityTemplate));
 
     newTemplate->quota = 0;
     newTemplate->number = 0;
@@ -146,7 +164,7 @@ int communityLoadTemplatesFromFile(struct communityManager* CM, char* filename)
 
 static void printTemplateClbk(void* elem, void* data)
 {
-    struct community* C = elem;
+    struct communityTemplate* C = elem;
 
     printf("Template: %s\n  - quota: %d\n  - nbPositions: %d\n", C->genericName, C->quota, C->nbPositions);
     printf("  - Positions:\n");
@@ -174,11 +192,12 @@ static void printCommunityClbk(void* elem, void* data)
 
     for (i = 0; i < C->nbPositions; i++)
     {
-        printf("    - name: %s - salary: %d - nbPeople: %d - hierarchy: %d - minAge: %d"
-                " - maxAge: %d - timeRatio: %d\n",
-                C->positions[i].name, C->positions[i].salary, C->positions[i].nbPeople,
+        printf("    - name: %s - salary: %d/%d - nbPeople: %d/%d - hierarchy: %d - minAge: %d"
+                " - maxAge: %d - timeRatio: %d/%d\n",
+                C->positions[i].name, C->positions[i].salaryMin, C->positions[i].salaryMax,
+                C->positions[i].nbPeopleMin, C->positions[i].nbPeopleMax,
                 C->positions[i].hierarchy, C->positions[i].minAge, C->positions[i].maxAge,
-                C->positions[i].timeRatio);
+                C->positions[i].timeRatioMin, C->positions[i].timeRatioMax);
     }
 }
 
@@ -200,7 +219,7 @@ void communityGenerateFromTemplates(struct communityManager* CM, int nbPeople)
 
     for (i = 0; i < CM->templates->count; i++)
     {
-        struct community* curT = CM->templates->data[i];
+        struct communityTemplate* curT = CM->templates->data[i];
 
         int nbCom = 0;
 
@@ -226,7 +245,7 @@ void communityGenerateFromTemplates(struct communityManager* CM, int nbPeople)
 
             int k = 0;
 
-            *newC = *curT;
+            //*newC = *curT;
 
             for (k = 0; k < newC->nbPositions; k++)
             {
