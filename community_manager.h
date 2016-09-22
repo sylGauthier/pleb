@@ -13,6 +13,8 @@ struct position
     int timeRatio;
 
     char name[25];
+
+    int type;
 };
 
 struct positionTemplate
@@ -29,11 +31,13 @@ struct positionTemplate
     int timeRatioMax;
 
     char name[25];
+
+    int type;
 };
 
-enum COMMUNITY_TYPE
+enum POSITION_TYPE
 {
-    WORK,
+    WORK = 0,
     LEISURE
 };
 
@@ -46,8 +50,6 @@ struct community
 
     char genericName[20];
     char specificName[20];
-
-    int type;
 };
 
 struct communityTemplate
@@ -62,8 +64,6 @@ struct communityTemplate
 
     //If quota = 0, this indicates the absolute number of this kind of community
     int number;
-
-    int type;
 };
 
 struct communityManager
@@ -74,7 +74,7 @@ struct communityManager
 
 struct communityManager*  communityNewManager();
 
-int communityLoadCommunitiesFromFile(struct communityManager* CM, char* filename);
+int communityLoadTemplatesFromFile(struct communityManager* CM, char* filename);
 void communityPrintTemplates(struct communityManager* CM);
 void communityPrintCommunities(struct communityManager* CM);
 

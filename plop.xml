@@ -1,5 +1,5 @@
 <communities>
-    <community genericName="city hall" quota="0" number="1" type="work">
+    <community genericName="city hall" quota="0" number="1">
         <position
             name="mayor"
             hierarchy="1"
@@ -7,197 +7,216 @@
             salary="10000/15000"
             minAge="35"
             maxAge="75"
-            timeRatio="40"
+            timeRatio="40/60"
+            type="work"
             />
 
         <position
             name="worker"
             hierarchy="2"
-            nbPeople="40"
-            salary="1000"
+            nbPeople="40/100"
+            salary="1000/2000"
             minAge="25"
             maxAge="100"
-            timeRatio="40"
+            timeRatio="40/60"
+            type="work"
             />
 
         <position
             name="nightguard"
             hierarchy="2"
-            nbPeople="2"
-            salary="900"
+            nbPeople="2/5"
+            salary="900/1200"
             minAge="20"
             maxAge="60"
-            timeRatio="50"
+            timeRatio="50/60"
+            type="work"
             />
 
         <position
             name="coffee boy"
             hierarchy="50000"
-            nbPeople="2"
+            nbPeople="2/5"
             salary="0"
             minAge="16"
             maxAge="25"
             timeRatio="40"
+            type="work"
             />
     </community>
 
-    <community genericName="corporation" quota="2000" number="0" type="work">
+    <community genericName="corporation" quota="2000" number="0">
         <position
             name="CEO"
             hierarchy="1"
             nbPeople="1"
-            salary="20000"
+            salary="20000/30000"
             minAge="35"
             maxAge="75"
-            timeRatio="50"
+            timeRatio="50/60"
+            type="work"
             />
 
         <position
             name="manager"
             hierarchy="2"
-            nbPeople="10"
-            salary="15000"
+            nbPeople="10/20"
+            salary="10000/15000"
             minAge="30"
             maxAge="75"
             timeRatio="50"
+            type="work"
             />
 
         <position
             name="employee"
             hierarchy="3"
-            nbPeople="80"
-            salary="3000"
+            nbPeople="60/100"
+            salary="2000/5000"
             minAge="25"
             maxAge="75"
-            timeRatio="50"
+            timeRatio="40/60"
+            type="work"
             />
 
         <position
             name="intern"
             hierarchy="5"
-            nbPeople="2"
-            salary="500"
+            nbPeople="2/10"
+            salary="500/1000"
             minAge="16"
             maxAge="25"
-            timeRatio="50"
+            timeRatio="40/60"
+            type="work"
             />
     </community>
 
-    <community genericName="highschool" quota="10000" number="0" type="work">
+    <community genericName="highschool" quota="10000" number="0">
         <position
             name="Head"
             hierarchy="1"
             nbPeople="1"
-            salary="5000"
+            salary="5000/6000"
             minAge="35"
             maxAge="75"
-            timeRatio="50"
+            timeRatio="40/50"
+            type="work"
             />
 
         <position
             name="teacher"
             hierarchy="2"
-            nbPeople="10"
-            salary="1500"
+            nbPeople="10/20"
+            salary="1500/3000"
             minAge="30"
             maxAge="75"
-            timeRatio="50"
+            timeRatio="30/40"
+            type="work"
             />
 
         <position
             name="pupil"
             hierarchy="5"
-            nbPeople="300"
+            nbPeople="150/400"
             salary="0"
             minAge="14"
             maxAge="18"
-            timeRatio="50"
+            timeRatio="30/40"
+            type="work"
             />
     </community>
 
-    <community genericName="school" quota="2000" number="0" type="work">
+    <community genericName="school" quota="1000" number="0">
         <position
             name="Head"
             hierarchy="1"
             nbPeople="1"
-            salary="5000"
+            salary="4000/5000"
             minAge="35"
             maxAge="75"
-            timeRatio="50"
+            timeRatio="40/50"
+            type="work"
             />
 
         <position
             name="teacher"
             hierarchy="2"
-            nbPeople="10"
+            nbPeople="10/20"
             salary="1500"
             minAge="30"
             maxAge="75"
-            timeRatio="50"
+            timeRatio="30/40"
+            type="work"
             />
 
         <position
             name="pupil"
             hierarchy="5"
-            nbPeople="300"
+            nbPeople="100/200"
             salary="0"
             minAge="4"
             maxAge="14"
-            timeRatio="50"
+            timeRatio="30/40"
+            type="work"
             />
     </community>
 
-    <community genericName="university" quota="50000" number="0" type="work">
+    <community genericName="university" quota="50000" number="0">
         <position
             name="Head"
             hierarchy="1"
             nbPeople="1"
-            salary="5000"
+            salary="5000/6000"
             minAge="35"
             maxAge="75"
-            timeRatio="50"
+            timeRatio="40/50"
+            type="work"
             />
 
         <position
             name="teacher"
             hierarchy="2"
-            nbPeople="30"
-            salary="2000"
+            nbPeople="30/50"
+            salary="2000/3000"
             minAge="30"
             maxAge="75"
-            timeRatio="50"
+            timeRatio="40/50"
+            type="work"
             />
 
         <position
             name="student"
             hierarchy="5"
-            nbPeople="3000"
+            nbPeople="3000/4000"
             salary="0"
             minAge="18"
             maxAge="25"
-            timeRatio="50"
+            timeRatio="20/50"
+            type="work"
             />
     </community>
 
-    <community genericName="store" quota="200" number="0" type="work">
+    <community genericName="store" quota="200" number="0">
         <position
             name="manager"
             hierarchy="1"
             nbPeople="1"
-            salary="2000"
+            salary="2000/2500"
             minAge="25"
             maxAge="75"
-            timeRatio="50"
+            timeRatio="50/60"
+            type="work"
             />
 
         <position
             name="employee"
             hierarchy="2"
-            nbPeople="3"
-            salary="1500"
+            nbPeople="3/10"
+            salary="1500/2000"
             minAge="30"
             maxAge="75"
-            timeRatio="50"
+            timeRatio="50/60"
+            type="work"
             />
     </community>
 </communities>

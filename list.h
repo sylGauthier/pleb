@@ -1,7 +1,11 @@
 #ifndef LIST_H
 #define LIST_H
 
-struct ListItem;
+struct ListItem
+{
+    void* elem;
+    struct ListItem* next;
+};
 
 typedef struct ListItem* List;
 

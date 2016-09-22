@@ -3,12 +3,6 @@
 
 #include "list.h"
 
-struct ListItem
-{
-    void* elem;
-    struct ListItem* next;
-};
-
 void listPush(List* l, void* elem)
 {
     List head = malloc(sizeof(struct ListItem));

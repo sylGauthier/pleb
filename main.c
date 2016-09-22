@@ -20,7 +20,6 @@ int main()
     generatePeople(SG, nbPeople);
 
     printf("Generated %d couples out of %d people\n", generateFamilies(SG), nbPeople);
-    printf("There are still %d underage orphans\n", statCountOrphanKids(SG));
 
     saveGraph(SG, "test.graphml");
 

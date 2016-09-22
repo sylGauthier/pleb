@@ -5,6 +5,7 @@
 #include <libxml/parser.h>
 
 #include "community_manager.h"
+#include "rand_tools.h"
 
 struct communityManager* communityNewManager()
 {
@@ -63,6 +64,16 @@ static void parsePosition(xmlDocPtr doc, xmlNodePtr cur, struct communityTemplat
     attr = xmlGetProp(cur, (xmlChar*) "name");
     strncpy(com->positions[positionIndex].name, (char*) attr, 20);
     xmlFree(attr);
+
+    attr = xmlGetProp(cur, (xmlChar*) "type");
+    if (attr)
+    {
+        if (!xmlStrcmp(attr, (xmlChar*) "work"))
+            com->positions[positionIndex].type = WORK;
+        else if (!xmlStrcmp(attr, (xmlChar*) "leisure"))
+            com->positions[positionIndex].type = LEISURE;
+    }
+    xmlFree(attr);
 }
 
 static void parseCommunity(xmlDocPtr doc, xmlNodePtr cur, struct communityManager* CM)
@@ -86,16 +97,6 @@ static void parseCommunity(xmlDocPtr doc, xmlNodePtr cur, struct communityManage
     if (nb)
         newTemplate->number = strtol((char*) nb, NULL, 10);
     xmlFree(nb);
-
-    xmlChar* type = xmlGetProp(cur, (xmlChar*) "type");
-    if (type)
-    {
-        if (!xmlStrcmp(type, (xmlChar*) "work"))
-            newTemplate->type = WORK;
-        else if (!xmlStrcmp(type, (xmlChar*) "leisure"))
-            newTemplate->type = LEISURE;
-    }
-    xmlFree(type);
 
     printf("New template: %s, quota: %d\n", newTemplate->genericName, newTemplate->quota);
 
@@ -174,11 +175,11 @@ static void printTemplateClbk(void* elem, void* data)
     for (i = 0; i < C->nbPositions; i++)
     {
         printf("    - name: %s - salary: %d/%d - nbPeople: %d/%d - hierarchy: %d - minAge: %d"
-                " - maxAge: %d - timeRatio: %d/%d\n",
+                " - maxAge: %d - timeRatio: %d/%d - type: %s\n",
                 C->positions[i].name, C->positions[i].salaryMin, C->positions[i].salaryMax,
                 C->positions[i].nbPeopleMin, C->positions[i].nbPeopleMax,
                 C->positions[i].hierarchy, C->positions[i].minAge, C->positions[i].maxAge,
-                C->positions[i].timeRatioMin, C->positions[i].timeRatioMax);
+                C->positions[i].timeRatioMin, C->positions[i].timeRatioMax, C->positions[i].type ? "leisure" : "work");
     }
 }
 
@@ -194,10 +195,10 @@ static void printCommunityClbk(void* elem, void* data)
     for (i = 0; i < C->nbPositions; i++)
     {
         printf("    - name: %s - salary: %d - nbPeople: %d - hierarchy: %d - minAge: %d"
-                " - maxAge: %d - timeRatio: %d\n",
+                " - maxAge: %d - timeRatio: %d - type: %s\n",
                 C->positions[i].name, C->positions[i].salary, C->positions[i].nbPeople,
                 C->positions[i].hierarchy, C->positions[i].minAge, C->positions[i].maxAge,
-                C->positions[i].timeRatio);
+                C->positions[i].timeRatio, C->positions[i].type ? "leisure" : "work");
     }
 }
 
@@ -251,13 +252,14 @@ void communityGenerateFromTemplates(struct communityManager* CM, int nbPeople)
             for (k = 0; k < newC->nbPositions; k++)
             {
                 newC->positions[k].hierarchy = curT->positions[k].hierarchy;
-                newC->positions[k].nbPeople = curT->positions[k].nbPeopleMin;
-                newC->positions[k].salary = curT->positions[k].salaryMin;
+                newC->positions[k].nbPeople = randUniform(curT->positions[k].nbPeopleMin, curT->positions[k].nbPeopleMax);
+                newC->positions[k].salary = randUniform(curT->positions[k].salaryMin, curT->positions[k].salaryMax);
                 newC->positions[k].minAge = curT->positions[k].minAge;
                 newC->positions[k].maxAge = curT->positions[k].maxAge;
-                newC->positions[k].timeRatio = curT->positions[k].timeRatioMin;
+                newC->positions[k].timeRatio = randUniform(curT->positions[k].timeRatioMin, curT->positions[k].timeRatioMax);
                 strncpy(newC->positions[k].name, curT->positions[k].name, 25);
                 totPositions += newC->positions[k].nbPeople;
+                newC->positions[k].type = curT->positions[k].type;
             }
 
             snprintf(newC->specificName, 20, "%s%d", curT->genericName, j);
