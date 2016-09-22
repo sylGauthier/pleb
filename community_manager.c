@@ -34,7 +34,7 @@ static void parseDoubleArg(char* arg, int* n1, int* n2)
         *n2 = *n1;
 }
 
-static void parsePosition(xmlDocPtr doc, xmlNodePtr cur, struct community* com, int positionIndex)
+static void parsePosition(xmlDocPtr doc, xmlNodePtr cur, struct communityTemplate* com, int positionIndex)
 {
     xmlChar* attr = xmlGetProp(cur, (xmlChar*) "hierarchy");
     com->positions[positionIndex].hierarchy = strtol((char*) attr, NULL, 10);
@@ -173,11 +173,12 @@ static void printTemplateClbk(void* elem, void* data)
 
     for (i = 0; i < C->nbPositions; i++)
     {
-        printf("    - name: %s - salary: %d - nbPeople: %d - hierarchy: %d - minAge: %d"
-                " - maxAge: %d - timeRatio: %d\n",
-                C->positions[i].name, C->positions[i].salary, C->positions[i].nbPeople,
+        printf("    - name: %s - salary: %d/%d - nbPeople: %d/%d - hierarchy: %d - minAge: %d"
+                " - maxAge: %d - timeRatio: %d/%d\n",
+                C->positions[i].name, C->positions[i].salaryMin, C->positions[i].salaryMax,
+                C->positions[i].nbPeopleMin, C->positions[i].nbPeopleMax,
                 C->positions[i].hierarchy, C->positions[i].minAge, C->positions[i].maxAge,
-                C->positions[i].timeRatio);
+                C->positions[i].timeRatioMin, C->positions[i].timeRatioMax);
     }
 }
 
@@ -185,19 +186,18 @@ static void printCommunityClbk(void* elem, void* data)
 {
     struct community* C = elem;
 
-    printf("Community: %s\n  - quota: %d\n  - nbPositions: %d\n", C->specificName, C->quota, C->nbPositions);
+    printf("Community: %s\n - nbPositions: %d\n", C->specificName, C->nbPositions);
     printf("  - Positions:\n");
 
     int i = 0;
 
     for (i = 0; i < C->nbPositions; i++)
     {
-        printf("    - name: %s - salary: %d/%d - nbPeople: %d/%d - hierarchy: %d - minAge: %d"
-                " - maxAge: %d - timeRatio: %d/%d\n",
-                C->positions[i].name, C->positions[i].salaryMin, C->positions[i].salaryMax,
-                C->positions[i].nbPeopleMin, C->positions[i].nbPeopleMax,
+        printf("    - name: %s - salary: %d - nbPeople: %d - hierarchy: %d - minAge: %d"
+                " - maxAge: %d - timeRatio: %d\n",
+                C->positions[i].name, C->positions[i].salary, C->positions[i].nbPeople,
                 C->positions[i].hierarchy, C->positions[i].minAge, C->positions[i].maxAge,
-                C->positions[i].timeRatioMin, C->positions[i].timeRatioMax);
+                C->positions[i].timeRatio);
     }
 }
 
@@ -246,9 +246,17 @@ void communityGenerateFromTemplates(struct communityManager* CM, int nbPeople)
             int k = 0;
 
             //*newC = *curT;
+            newC->nbPositions = curT->nbPositions;
 
             for (k = 0; k < newC->nbPositions; k++)
             {
+                newC->positions[k].hierarchy = curT->positions[k].hierarchy;
+                newC->positions[k].nbPeople = curT->positions[k].nbPeopleMin;
+                newC->positions[k].salary = curT->positions[k].salaryMin;
+                newC->positions[k].minAge = curT->positions[k].minAge;
+                newC->positions[k].maxAge = curT->positions[k].maxAge;
+                newC->positions[k].timeRatio = curT->positions[k].timeRatioMin;
+                strncpy(newC->positions[k].name, curT->positions[k].name, 25);
                 totPositions += newC->positions[k].nbPeople;
             }
 

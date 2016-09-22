@@ -19,7 +19,7 @@ struct positionTemplate
 {
     int hierarchy;
     int nbPeopleMax, nbPeopleMin;
-    int salaryMax, salarMin;
+    int salaryMax, salaryMin;
 
     int minAge;
     int maxAge;
