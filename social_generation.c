@@ -22,7 +22,7 @@ void randID(SocialGraph* SG, struct identity* ID)
     ID->age = randAge();
     ID->sex = rand() % 2;
 
-    nameRandName(&(SG->NM), FRENCH, ID->sex, &(ID->firstName), &(ID->lastName));
+    nameRandName(SG->NM, FRENCH, ID->sex, &(ID->firstName), &(ID->lastName));
 }
 
 void randPers(struct personality* pers)

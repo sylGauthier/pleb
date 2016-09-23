@@ -35,7 +35,7 @@ static void writeNode(FILE *f, SocialGraph* SG, int ID)
             "<data key=\"d1\">%d</data>\n"
             "<data key=\"d3\">%s</data>\n"
             "<data key=\"d4\">%s</data>\n"
-            "</node>\n", na->nodeID, na->ID.age, nameGetFirstName(&(SG->NM), na->ID.firstName), nameGetLastName(&(SG->NM), na->ID.lastName));
+            "</node>\n", na->nodeID, na->ID.age, nameGetFirstName(SG->NM, na->ID.firstName), nameGetLastName(SG->NM, na->ID.lastName));
 }
 
 static void writeEdge(FILE *f, int ID, int from, int to, int type)

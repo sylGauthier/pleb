@@ -1,3 +1,6 @@
+#ifndef COMMUNITY_MANAGER_H
+#define COMMUNITY_MANAGER_H
+
 #include "vector.h"
 
 struct position
@@ -83,3 +86,6 @@ void communityPrintCommunities(struct communityManager* CM);
 void communityGenerateFromTemplates(struct communityManager* CM, int nbPeople);
 
 void communityFree(struct communityManager* CM);
+
+
+#endif

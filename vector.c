@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <stdio.h>
 
 #include "vector.h"
 
@@ -48,6 +49,19 @@ void vectorMap(Vector vec, void (*mapfun)(void* elem, void* dataIn), void* data)
     }
 }
 
+void vectorShuffle(Vector* v)
+{
+    int i = 0;
+
+    for (i = v->count - 1; i > 0; i--)
+    {
+        int j = rand() % i;
+        void* tmp = v->data[i];
+        v->data[i] = v->data[j];
+        v->data[j] = tmp;
+    }
+}
+
 void* vectorAt(Vector* v, int i)
 {
     if (v)
@@ -77,4 +91,14 @@ void vectorFree(Vector* vec)
 {
     free(vec->data);
     free(vec);
+}
+
+static void printIntClbk(void* elem, void* data)
+{
+    printf("%d\n", *(int*)elem);
+}
+
+void printIntVector(Vector* v)
+{
+    vectorMap(*v, printIntClbk, NULL);
 }

@@ -1,9 +1,11 @@
 #ifndef RAND_TOOLS_H
 #define RAND_TOOLS_H
 
-#include "list.h"
+#include "vector.h"
 
 int randUniform(int a, int b);
-List randRoute(int nb);
+
+//Thank you Fisher-Yates...
+Vector* randRoute(int nb);
 
 #endif

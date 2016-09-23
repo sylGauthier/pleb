@@ -33,7 +33,7 @@ struct nameManager
 };
 
 
-void nameInitManager(struct nameManager* NM);
+struct nameManager* nameNewManager();
 
 //Loads names of the given race and sex from a file, FN = 1 for first names, any other
 //value for last names.

@@ -9,7 +9,8 @@ SocialGraph* socialNew()
     SocialGraph* sg = malloc(sizeof(SocialGraph));
     sg->G = graphNew();
 
-    nameInitManager(&(sg->NM));
+    sg->NM = nameNewManager();
+    sg->CM = communityNewManager();
 
     return sg;
 }
@@ -144,7 +145,8 @@ void socialFree(SocialGraph* sg)
     //vectorMap(sg->firstNames, freeCallback, NULL);
     //vectorMap(sg->lastNames, freeCallback, NULL);
     
-    nameFreeManager(&sg->NM);
+    nameFreeManager(sg->NM);
+    communityFree(sg->CM);
 
     free(sg);
     printf("Done\n");

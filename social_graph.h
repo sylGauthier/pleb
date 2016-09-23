@@ -3,6 +3,7 @@
 
 #include "graph.h"
 #include "name_manager.h"
+#include "community_manager.h"
 
 enum _familyLink_
 {
@@ -21,7 +22,8 @@ enum _familyLink_
 
 typedef struct SocialGraph
 {
-    struct nameManager NM;
+    struct nameManager* NM;
+    struct communityManager* CM;
     Graph* G;
 } SocialGraph;
 

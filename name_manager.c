@@ -4,8 +4,10 @@
 
 #include "name_manager.h"
 
-void nameInitManager(struct nameManager* NM)
+struct nameManager* nameNewManager()
 {
+    struct nameManager* NM = malloc(sizeof(struct nameManager));
+
     int i = 0;
 
     for (i = 0; i < 20; i++)
@@ -18,6 +20,8 @@ void nameInitManager(struct nameManager* NM)
 
     NM->firstNames = vectorNew();
     NM->lastNames = vectorNew();
+
+    return NM;
 }
 
 void nameLoadFromFile(struct nameManager* NM, char* fileName, int race, int sex, int FN)
@@ -101,4 +105,6 @@ void nameFreeManager(struct nameManager* NM)
 
     vectorFlush(NM->lastNames);
     vectorFree(NM->lastNames);
+
+    free(NM);
 }

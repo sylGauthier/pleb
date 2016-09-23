@@ -5,35 +5,33 @@
 #include "social_generation.h"
 #include "save_graph.h"
 #include "stat_tools.h"
-#include "community_manager.h"
+#include "rand_tools.h"
 
 int main()
 {
-    /* int nbPeople = 100;
+    int nbPeople = 100000;
     SocialGraph* SG = socialNew();
 
-    nameLoadFromFile(&(SG->NM), "firstNamesFRFemales.txt", FRENCH, FEMALE, FIRST_NAME);
-    nameLoadFromFile(&(SG->NM), "firstNamesFRMales.txt", FRENCH, MALE, FIRST_NAME);
-    nameLoadFromFile(&(SG->NM), "lastNamesFR.txt", FRENCH, FEMALE, LAST_NAME);
-    nameLoadFromFile(&(SG->NM), "lastNamesFR.txt", FRENCH, MALE, LAST_NAME);
+    communityLoadTemplatesFromFile(SG->CM, "plop.xml");
+    communityPrintTemplates(SG->CM);
+    communityGenerateFromTemplates(SG->CM, nbPeople);
+
+    nameLoadFromFile(SG->NM, "firstNamesFRFemales.txt", FRENCH, FEMALE, FIRST_NAME);
+    nameLoadFromFile(SG->NM, "firstNamesFRMales.txt", FRENCH, MALE, FIRST_NAME);
+    nameLoadFromFile(SG->NM, "lastNamesFR.txt", FRENCH, FEMALE, LAST_NAME);
+    nameLoadFromFile(SG->NM, "lastNamesFR.txt", FRENCH, MALE, LAST_NAME);
 
     generatePeople(SG, nbPeople);
 
     printf("Generated %d couples out of %d people\n", generateFamilies(SG), nbPeople);
 
+    Vector* v = randRoute(200000);
+    vectorFlush(v);
+    vectorFree(v);
+
     saveGraph(SG, "test.graphml");
 
-    socialFree(SG);*/
-
-    struct communityManager* CM = communityNewManager();
-
-    communityLoadTemplatesFromFile(CM, "plop.xml");
-    communityPrintTemplates(CM);
-
-    communityGenerateFromTemplates(CM, 100000);
-    //communityPrintCommunities(CM);
-
-    communityFree(CM);
+    socialFree(SG);
 
     return 0;
 }
