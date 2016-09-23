@@ -3,9 +3,10 @@
 
 #include "vector.h"
 
+//Returns a random integer between a (incl) and b (excl) with an uniform probability
 int randUniform(int a, int b);
 
-//Thank you Fisher-Yates...
+//Generates a shuffled vector containing all integers from 0 to nb-1 without redundancy
 Vector* randRoute(int nb);
 
 #endif

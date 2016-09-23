@@ -2,6 +2,7 @@
 #include <stdio.h>
 
 #include "social_generation.h"
+#include "rand_tools.h"
 
 //Simulates very approximately the french age pyramid of 2014
 static int randAge()
@@ -265,16 +266,18 @@ int generateFamilies(SocialGraph* SG)
     int count = 0;
     int collid = 0;
 
-    int nbActives = SG->G->nbNodes;
+    int nbPeople = SG->G->nbNodes;
 
-    //for (i = 0; i < 6*nbActives; i++)
+    Vector* path1 = randRoute(nbPeople);
+    int pathIndex = 0;
+
+    //for (i = 0; i < 6*nbPeople; i++)
     //TODO optimize this. Around 150,000 rejected solutions for 2500 couples...
     //TODO make sure the loop actually stops at some point lol.
-    while (count < nbActives/4) //About 50% of french population is in a relationship according to INSEE
+    while (count < nbPeople/4) //About 50% of french population is in a relationship according to INSEE
     {
-        int j = rand() % nbActives;
-        int k = rand() % nbActives;
-
+        int j = *((int*)path1->data[pathIndex % nbPeople]);
+        int k = *((int*)path1->data[rand() % nbPeople]);
 
         struct nodeAttrib* na1 = graphGetNodeAttribute(SG->G, k);
         struct nodeAttrib* na2 = graphGetNodeAttribute(SG->G, j);
@@ -289,19 +292,25 @@ int generateFamilies(SocialGraph* SG)
         }
         else
             collid++;
+
+        pathIndex++;
     }
 
+    vectorFlush(path1);
+    vectorFree(path1);
+
+    printf("%d colliding matches\n", collid);
     printf("Creating families...\n");
 
     int i = 0;
     //int j = 0;
 
-    for (i = 0; i < nbActives; i++)
+    for (i = 0; i < nbPeople; i++)
     {
-        //int i = rand() % nbActives;
+        //int i = rand() % nbPeople;
         struct nodeAttrib* na = graphGetNodeAttribute(SG->G, i);
         int affiliated = 0;
-        int parentID = rand()%nbActives;
+        int parentID = rand()%nbPeople;
 
         do
         {
@@ -318,11 +327,10 @@ int generateFamilies(SocialGraph* SG)
                     affiliate(SG, i, m8);
             }
             //So we are sure we find a suitable parent for children in a finite time
-            parentID = (parentID + 1) % nbActives;
+            parentID = (parentID + 1) % nbPeople;
 
         } while (na->ID.age <= 18 && !affiliated); //That way there can't be any orphan child.
     }
 
-    printf("%d colliding matches\n", collid);
     return count;
 }

@@ -55,7 +55,7 @@ void vectorShuffle(Vector* v)
 
     for (i = v->count - 1; i > 0; i--)
     {
-        int j = rand() % i;
+        int j = rand() % (i+1);
         void* tmp = v->data[i];
         v->data[i] = v->data[j];
         v->data[j] = tmp;
