@@ -13,7 +13,6 @@ int main()
     SocialGraph* SG = socialNew();
 
     communityLoadTemplatesFromFile(SG->CM, "plop.xml");
-    communityPrintTemplates(SG->CM);
     communityGenerateFromTemplates(SG->CM, nbPeople);
 
     nameLoadFromFile(SG->NM, "firstNamesFRFemales.txt", FRENCH, FEMALE, FIRST_NAME);

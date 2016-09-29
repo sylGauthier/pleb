@@ -334,3 +334,27 @@ int generateFamilies(SocialGraph* SG)
 
     return count;
 }
+
+int generateCommunities(SocialGraph* SG)
+{
+    int nbPeople = SG->G->nbNodes;
+    int nbCommunities = SG->CM->communities->count;
+
+    Vector* path = randRoute(nbPeople);
+    int pathIndex = 0;
+
+    for (pathIndex = 0; pathIndex < nbPeople; pathIndex++)
+    {
+        struct nodeAttrib* cur = graphGetNodeAttribute(SG->G, *((int*) path->data[pathIndex]));
+
+        int i = 0;
+
+        for (i = 0; i < nbCommunities; i++)
+        {
+
+        }
+    }
+
+    vectorFlush(path);
+    vectorFree(path);
+}

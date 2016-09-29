@@ -136,14 +136,19 @@ void freeCallback(void* attr, void* data)
     free(attr);
 }
 
+void freeNodeCallback(void* attr, void* data)
+{
+    struct nodeAttrib* cur = attr;
+    listFlush(cur->communities);
+    free(cur);
+}
+
 void socialFree(SocialGraph* sg)
 {
     printf("Freeing social graph...\n");
-    graphMapNodes(sg->G, freeCallback, NULL);
+    graphMapNodes(sg->G, freeNodeCallback, NULL);
     graphMapEdges(sg->G, freeCallback, NULL);
     graphFree(sg->G);
-    //vectorMap(sg->firstNames, freeCallback, NULL);
-    //vectorMap(sg->lastNames, freeCallback, NULL);
     
     nameFreeManager(sg->NM);
     communityFree(sg->CM);

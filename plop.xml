@@ -45,7 +45,64 @@
             />
     </community>
 
-    <community genericName="corporation" quota="2000" number="0">
+    <community genericName="police" quota="0" number="1">
+        <position
+            name="chief"
+            hierarchy="1"
+            nbPeople="1"
+            salary="8000/10000"
+            minAge="35"
+            maxAge="75"
+            timeRatio="50/60"
+            type="work"
+            />
+
+        <position
+            name="inspector"
+            hierarchy="2"
+            nbPeople="25/50"
+            salary="1500/2500"
+            minAge="25"
+            maxAge="100"
+            timeRatio="40/60"
+            type="work"
+            />
+
+        <position
+            name="officer"
+            hierarchy="3"
+            nbPeople="100/150"
+            salary="900/1200"
+            minAge="18"
+            maxAge="60"
+            timeRatio="50/60"
+            type="work"
+            />
+
+        <position
+            name="personal"
+            hierarchy="4"
+            nbPeople="100/150"
+            salary="800/1100"
+            minAge="18"
+            maxAge="60"
+            timeRatio="50/60"
+            type="work"
+            />
+
+        <position
+            name="coffee boy"
+            hierarchy="50000"
+            nbPeople="2/5"
+            salary="0"
+            minAge="16"
+            maxAge="25"
+            timeRatio="40"
+            type="work"
+            />
+    </community>
+
+    <community genericName="corporation" quota="1000" number="0">
         <position
             name="CEO"
             hierarchy="1"

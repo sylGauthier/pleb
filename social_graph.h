@@ -58,6 +58,7 @@ struct nodeAttrib
     int nodeID;
     struct identity ID;
     struct personality pers;
+    List communities;
 };
 
 struct relationAttrib
