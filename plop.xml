@@ -102,7 +102,7 @@
             />
     </community>
 
-    <community genericName="corporation" quota="1000" number="0">
+    <community genericName="corporation" quota="600" number="0">
         <position
             name="CEO"
             hierarchy="1"
@@ -117,7 +117,7 @@
         <position
             name="manager"
             hierarchy="2"
-            nbPeople="10/20"
+            nbPeople="10/50"
             salary="10000/15000"
             minAge="30"
             maxAge="75"
@@ -128,7 +128,7 @@
         <position
             name="employee"
             hierarchy="3"
-            nbPeople="60/100"
+            nbPeople="60/300"
             salary="2000/5000"
             minAge="25"
             maxAge="75"
@@ -148,7 +148,7 @@
             />
     </community>
 
-    <community genericName="highschool" quota="10000" number="0">
+    <community genericName="highschool" quota="5000" number="0">
         <position
             name="Head"
             hierarchy="1"

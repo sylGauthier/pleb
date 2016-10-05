@@ -64,9 +64,6 @@ void nameLoadFromFile(struct nameManager* NM, char* fileName, int race, int sex,
     count--;
     NM->selectors[FN][race*2 + sex].nb = count;
 
-    printf("%d names loaded from %s\n", count, fileName);
-    printf("Names range from %d to %d\n", NM->selectors[FN][race*2 + sex].start, NM->selectors[FN][race*2 + sex].start + count - 1);
-
     fclose(f);
 }
 

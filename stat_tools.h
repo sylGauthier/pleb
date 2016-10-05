@@ -4,5 +4,6 @@
 #include "social_graph.h"
 
 int statCountOrphanKids(SocialGraph* SG);
+void printUnassignedPositions(SocialGraph* SG);
 
 #endif

@@ -337,24 +337,60 @@ int generateFamilies(SocialGraph* SG)
 
 int generateCommunities(SocialGraph* SG)
 {
+    printf("Starting communities generation...\n");
     int nbPeople = SG->G->nbNodes;
     int nbCommunities = SG->CM->communities->count;
 
+    //We generate a random path, that we will scan to assign positions to each node
+    //in a random order, to avoid statistical bias.
+    
+    printf("Assigning positions to nodes...\n");
+
     Vector* path = randRoute(nbPeople);
     int pathIndex = 0;
+    int posCount = 0;
 
     for (pathIndex = 0; pathIndex < nbPeople; pathIndex++)
     {
-        struct nodeAttrib* cur = graphGetNodeAttribute(SG->G, *((int*) path->data[pathIndex]));
+        struct nodeAttrib* curNode = graphGetNodeAttribute(SG->G, *((int*) path->data[pathIndex]));
+
+        //For each communities, we scan all the associated positions and find one that matches
+        //the current node
 
         int i = 0;
+        int positionned = 0; //Temporary, we start with only one position, of type "work"
 
-        for (i = 0; i < nbCommunities; i++)
+        for (i = 0; i < nbCommunities && !positionned; i++)
         {
+            struct community* curCom = SG->CM->communities->data[rand()%nbCommunities];
+            
+            int j = 0;
 
+            for (j = 0; j < curCom->nbPositions && !positionned; j++)
+            {
+                struct position* curPos = &(curCom->positions[j]);
+
+                if (curPos->people->count < curPos->nbPeople
+                        && curNode->ID.age >= curPos->minAge
+                        && curNode->ID.age <= curPos->maxAge)
+                {
+                    int* nID = malloc(sizeof(int));
+                    *nID = curNode->nodeID;
+                    vectorPush(curPos->people, nID);
+
+                    vectorPush(curNode->positions, curPos);
+
+                    positionned = 1; //Temporary
+                    posCount++;
+                }
+            }
         }
     }
 
+    printf("Assigned %d positions out of %d available positions\n", posCount, SG->CM->nbPositions);
+
     vectorFlush(path);
     vectorFree(path);
+
+    return 0;
 }

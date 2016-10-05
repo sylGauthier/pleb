@@ -5,8 +5,10 @@
 
 struct position
 {
+    int communityID;
     int hierarchy;
     int nbPeople;
+    Vector* people;
     int salary;
 
     int minAge;
@@ -71,6 +73,7 @@ struct communityTemplate
 
 struct communityManager
 {
+    int nbPositions;
     Vector* communities;
     Vector* templates;
 };

@@ -247,10 +247,12 @@ void communityGenerateFromTemplates(struct communityManager* CM, int nbPeople)
             int k = 0;
 
             //*newC = *curT;
+            newC->ID = communityID;
             newC->nbPositions = curT->nbPositions;
 
             for (k = 0; k < newC->nbPositions; k++)
             {
+                newC->positions[k].communityID = communityID;
                 newC->positions[k].hierarchy = curT->positions[k].hierarchy;
                 newC->positions[k].nbPeople = randUniform(curT->positions[k].nbPeopleMin, curT->positions[k].nbPeopleMax);
                 newC->positions[k].salary = randUniform(curT->positions[k].salaryMin, curT->positions[k].salaryMax);
@@ -260,21 +262,39 @@ void communityGenerateFromTemplates(struct communityManager* CM, int nbPeople)
                 strncpy(newC->positions[k].name, curT->positions[k].name, 25);
                 totPositions += newC->positions[k].nbPeople;
                 newC->positions[k].type = curT->positions[k].type;
+
+                newC->positions[k].people = vectorNew();
             }
 
+            strncpy(newC->genericName, curT->genericName, 20);
             snprintf(newC->specificName, 20, "%s%d", curT->genericName, j);
-            newC->ID = communityID;
 
             vectorPush(CM->communities, newC);
             communityID++;
         }
     }
 
+    CM->nbPositions = totPositions;
+
     printf("There are now %d positions for %d people in the network\n", totPositions, nbPeople);
+}
+
+static void freePosClbk(void* com, void* data)
+{
+    struct community* cur = com;
+
+    int i = 0;
+
+    for (i = 0; i < cur->nbPositions; i++)
+    {
+        vectorFlush(cur->positions[i].people);
+        vectorFree(cur->positions[i].people);
+    }
 }
 
 void communityFree(struct communityManager* CM)
 {
+    vectorMap(*(CM->communities), freePosClbk, NULL);
     vectorFlush(CM->communities);
     vectorFlush(CM->templates);
 

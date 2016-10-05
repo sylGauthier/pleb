@@ -24,11 +24,16 @@ int main()
 
     printf("Generated %d couples out of %d people\n", generateFamilies(SG), nbPeople);
 
-    Vector* v = randRoute(200000);
-    vectorFlush(v);
-    vectorFree(v);
+    generateCommunities(SG);
 
-    saveGraph(SG, "test.graphml");
+    int i = 0;
+
+    for (i = 0; i < 10; i++)
+    {
+        socialPrintNode(SG, i);
+    }
+
+    //saveGraph(SG, "test.graphml");
 
     socialFree(SG);
 

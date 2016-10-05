@@ -23,6 +23,7 @@ int socialAddNode(SocialGraph* SG, struct nodeAttrib attrib)
     {
         memcpy(na, &attrib, sizeof(struct nodeAttrib));
         na->nodeID =  graphAddNode(SG->G, na);
+        na->positions = vectorNew();
 
         return na->nodeID;
     }
@@ -76,9 +77,17 @@ static void printPeopleCallback(void* attr, void* data)
     struct relationAttrib* ea = NULL;
     SocialGraph* sg = data;
 
-    printf("### Individual ###\nID: %d\nName: %d\nAge: %d\nSex: %s\nPhone: %d\nAddress: %d\nIntelligence: %d\nEmotivity: %d\n",
-            na->nodeID, na->ID.firstName, na->ID.age, na->ID.sex ? "Female" : "Male", na->ID.phone, na->ID.address,
-            na->pers.intelligence, na->pers.emotionality);
+    printf("### Individual ###\nID: %d\nName: %s %s\nAge: %d\nSex: %s\n",
+            na->nodeID, nameGetFirstName(sg->NM, na->ID.firstName), nameGetLastName(sg->NM, na->ID.lastName),
+            na->ID.age, na->ID.sex ? "Female" : "Male");
+
+    if (na->positions->count > 0)
+    {
+        struct position* pos = na->positions->data[0];
+        struct community* com = sg->CM->communities->data[pos->communityID];
+
+        printf("Works at %s as %s\n", com->specificName, pos->name);
+    }
 
     List nb = graphGetEdgesFrom(sg->G, na->nodeID);
 
@@ -88,11 +97,32 @@ static void printPeopleCallback(void* attr, void* data)
     {
         curNB = listPop(&nb);
         ea = graphGetEdgeAttribute(sg->G, *curNB);
-        printf("-> %d, knows phone: %d, knows address: %d, knows email: %d\n",
-                graphGetNodeTo(sg->G, *curNB), ea->knowAbout.phone, ea->knowAbout.address, ea->knowAbout.email);
-        printf("Allegiance: %d, Attachment: %d\n", ea->perc.allegiance, ea->perc.attachment);
+        printf("-> %d as ", graphGetNodeTo(sg->G, *curNB));
 
-        free(curNB);
+        switch (ea->familyRel)
+        {
+            case PARENT :
+                printf("Parent\n");
+                break;
+
+            case SIBLING :
+                printf("Sibling\n");
+                break;
+
+            case CHILD :
+                printf("Child\n");
+                break;
+
+            case COUPLE :
+                printf("Couple\n");
+                break;
+
+            default :
+                printf("Acquaintance\n");
+                break;
+        }
+
+        printf("Allegiance: %d, Attachment: %d\n", ea->perc.allegiance, ea->perc.attachment);
     }
 
     printf("##################\n\n");
@@ -102,6 +132,13 @@ void socialPrintPeople(SocialGraph* SG)
 {
     printf("Printing social graph...\n\n");
     graphMapNodes(SG->G, printPeopleCallback, SG);
+}
+
+void socialPrintNode(SocialGraph* SG, int ID)
+{
+    struct nodeAttrib* na = graphGetNodeAttribute(SG->G, ID);
+
+    printPeopleCallback(na, SG);
 }
 
 static void buildAgePyramidCallback(void* attr, void* pyramid)
@@ -139,7 +176,8 @@ void freeCallback(void* attr, void* data)
 void freeNodeCallback(void* attr, void* data)
 {
     struct nodeAttrib* cur = attr;
-    listFlush(cur->communities);
+    //No listFlush because positions are freed with the freeCommunities method
+    vectorFree(cur->positions);
     free(cur);
 }
 

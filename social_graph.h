@@ -58,7 +58,7 @@ struct nodeAttrib
     int nodeID;
     struct identity ID;
     struct personality pers;
-    List communities;
+    Vector* positions;
 };
 
 struct relationAttrib
@@ -78,6 +78,7 @@ int socialAddRelation(SocialGraph* SG, int nf, int nt, struct relationAttrib);
 int socialIsMated(SocialGraph* SG, int n);
 
 void socialPrintPeople(SocialGraph* SG);
+void socialPrintNode(SocialGraph* SG, int ID);
 void printAgePyramid(SocialGraph* SG);
 
 void socialFree(SocialGraph* SG);
