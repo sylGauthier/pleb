@@ -34,6 +34,8 @@ int main()
     }
 
     //saveGraph(SG, "test.graphml");
+    
+    printf("\n\nInactive children (0-18 y.o): %d\n", nbInactives(SG, 0, 18));
 
     socialFree(SG);
 

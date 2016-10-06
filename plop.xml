@@ -276,5 +276,62 @@
             type="work"
             />
     </community>
+
+    <community genericName="hospital" quota="5000" number="0">
+        <position
+            name="director"
+            hierarchy="1"
+            nbPeople="1"
+            salary="3000/3500"
+            minAge="35"
+            maxAge="75"
+            timeRatio="50/60"
+            type="work"
+            />
+
+        <position
+            name="manager"
+            hierarchy="2"
+            nbPeople="15/20"
+            salary="2000/2500"
+            minAge="30"
+            maxAge="75"
+            timeRatio="50/60"
+            type="work"
+            />
+
+        <position
+            name="employee"
+            hierarchy="3"
+            nbPeople="30/40"
+            salary="1500/2000"
+            minAge="30"
+            maxAge="75"
+            timeRatio="50/60"
+            type="work"
+            />
+
+        <position
+            name="nurse"
+            hierarchy="4"
+            nbPeople="50/60"
+            salary="1500/2000"
+            minAge="20"
+            maxAge="60"
+            timeRatio="50/60"
+            type="work"
+            />
+
+        <position
+            name="intern"
+            hierarchy="10"
+            nbPeople="10/20"
+            salary="500/1000"
+            minAge="18"
+            maxAge="25"
+            timeRatio="55/60"
+            type="work"
+            />
+    </community>
 </communities>
 

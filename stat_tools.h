@@ -5,5 +5,6 @@
 
 int statCountOrphanKids(SocialGraph* SG);
 void printUnassignedPositions(SocialGraph* SG);
+int nbInactives(SocialGraph* SG, int minAge, int maxAge);
 
 #endif

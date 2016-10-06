@@ -59,3 +59,21 @@ void printUnassignedPositions(SocialGraph* SG)
         }
     }
 }
+
+int nbInactives(SocialGraph* SG, int minAge, int maxAge)
+{
+    int nbPeople = SG->G->nbNodes;
+
+    int i = 0;
+    int cpt = 0;
+
+    for (i = 0; i < nbPeople; i++)
+    {
+        struct nodeAttrib* na = graphGetNodeAttribute(SG->G, i);
+
+        if (na->ID.age >= minAge && na->ID.age <= maxAge && na->positions->count == 0)
+            cpt++;
+    }
+
+    return cpt;
+}
