@@ -4,38 +4,6 @@
 #include "social_generation.h"
 #include "rand_tools.h"
 
-//Simulates very approximately the french age pyramid of 2014
-static int randAge()
-{
-    int a = rand()%1001;
-
-    if (a <= 840)
-        return a / 12;
-    else
-    {
-        int r = (a*a*96*8 - (a*97)*1536*8 + 3675*1536*96)/(1536*96*8);
-        return r;
-    }
-}
-
-void randID(SocialGraph* SG, struct identity* ID)
-{
-    ID->age = randAge();
-    ID->sex = rand() % 2;
-
-    nameRandName(SG->NM, FRENCH, ID->sex, &(ID->firstName), &(ID->lastName));
-}
-
-void randPers(struct personality* pers)
-{
-    *pers = (struct personality) {(rand()%5 + rand()%6) + 1, rand()%10 + 1, rand()%10 + 1};
-}
-
-void randPerc(struct perception* perc)
-{
-    *perc = (struct perception) {1,2};
-}
-
 static void createCouple(SocialGraph* SG, int n1, int n2)
 {
     struct relationAttrib ra1;
@@ -388,6 +356,48 @@ int generateCommunities(SocialGraph* SG)
     }
 
     printf("Assigned %d positions out of %d available positions\n", posCount, SG->CM->nbPositions);
+
+    printf("Generating community related relationships...\n");
+
+    int comIndex = 0;
+
+    for (comIndex = 0; comIndex < SG->CM->communities->count; comIndex++)
+    {
+        struct community* curCom = SG->CM->communities->data[comIndex];
+
+        //For each community, we start by creating relationships between people
+        //in the same positions
+
+        int posIndex = 0;
+
+        for (posIndex = 0; posIndex < curCom->nbPositions; posIndex++)
+        {
+            struct position* curPos = &(curCom->positions[posIndex]);
+            Vector* posPath = randRoute(curPos->people->count);
+
+            int curNode = 0;
+
+            for (curNode = 0; curNode < posPath->count; curNode++)
+            {
+                struct nodeAttrib* n1 = graphGetNodeAttribute(SG->G, curNode);
+                struct nodeAttrib* n2 = graphGetNodeAttribute(SG->G, posPath->data[rand()%posPath->count]);
+
+                if (n1->nodeID != n2->nodeID)
+                {
+                    struct relationAttrib e;
+
+                    e.
+                }
+            }
+
+            vectorFlush(posPath);
+            vectorFree(posPath);
+        }
+
+        //Then we add "inter-positions" relationships, that way we are sure that people
+        //are more likely to be linked with colleagues in the same position, but are also
+        //still linked with others.
+    }
 
     vectorFlush(path);
     vectorFree(path);

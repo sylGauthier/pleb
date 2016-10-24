@@ -102,6 +102,109 @@
             />
     </community>
 
+    <community genericName="dock" quota="0" number="1">
+        <position
+            name="director"
+            hierarchy="1"
+            nbPeople="1"
+            salary="8000/10000"
+            minAge="35"
+            maxAge="75"
+            timeRatio="50/60"
+            type="work"
+            />
+
+        <position
+            name="manager"
+            hierarchy="2"
+            nbPeople="25/50"
+            salary="2500/3000"
+            minAge="25"
+            maxAge="100"
+            timeRatio="40/60"
+            type="work"
+            />
+
+        <position
+            name="docker"
+            hierarchy="3"
+            nbPeople="100/150"
+            salary="900/1200"
+            minAge="18"
+            maxAge="60"
+            timeRatio="50/60"
+            type="work"
+            />
+
+        <position
+            name="personal"
+            hierarchy="4"
+            nbPeople="100/150"
+            salary="800/1100"
+            minAge="18"
+            maxAge="60"
+            timeRatio="50/60"
+            type="work"
+            />
+
+        <position
+            name="coffee boy"
+            hierarchy="50000"
+            nbPeople="2/5"
+            salary="0"
+            minAge="16"
+            maxAge="25"
+            timeRatio="40"
+            type="work"
+            />
+    </community>
+
+    <community genericName="factory" quota="10000" number="0">
+        <position
+            name="CEO"
+            hierarchy="1"
+            nbPeople="1"
+            salary="20000/30000"
+            minAge="35"
+            maxAge="75"
+            timeRatio="50/60"
+            type="work"
+            />
+
+        <position
+            name="manager"
+            hierarchy="2"
+            nbPeople="50/100"
+            salary="10000/15000"
+            minAge="30"
+            maxAge="75"
+            timeRatio="50"
+            type="work"
+            />
+
+        <position
+            name="worker"
+            hierarchy="3"
+            nbPeople="500/1000"
+            salary="1500/2000"
+            minAge="25"
+            maxAge="75"
+            timeRatio="40/60"
+            type="work"
+            />
+
+        <position
+            name="intern"
+            hierarchy="5"
+            nbPeople="20/50"
+            salary="500/1000"
+            minAge="16"
+            maxAge="25"
+            timeRatio="40/60"
+            type="work"
+            />
+    </community>
+
     <community genericName="corporation" quota="600" number="0">
         <position
             name="CEO"
@@ -183,7 +286,7 @@
             />
     </community>
 
-    <community genericName="school" quota="1000" number="0">
+    <community genericName="school" quota="1100" number="0">
         <position
             name="Head"
             hierarchy="1"

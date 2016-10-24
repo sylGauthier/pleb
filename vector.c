@@ -7,9 +7,9 @@ Vector* vectorNew()
 {
     Vector* vec = malloc(sizeof(Vector));
 
-    vec->size = 20;
+    vec->size = CHUNK_SIZE;
     vec->count = 0;
-    vec->data = malloc(20*sizeof(void*));
+    vec->data = malloc(CHUNK_SIZE*sizeof(void*));
 
     return vec;
 }
@@ -18,8 +18,8 @@ void vectorPush(Vector* vec, void* elem)
 {
     if (vec->count >= vec->size)
     {
-        vec->data = realloc(vec->data, (vec->size + 20) * sizeof(void*));
-        vec->size += 20;
+        vec->data = realloc(vec->data, (vec->size + CHUNK_SIZE) * sizeof(void*));
+        vec->size += CHUNK_SIZE;
     }
 
     vec->data[vec->count] = elem;

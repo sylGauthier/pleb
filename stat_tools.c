@@ -52,9 +52,10 @@ void printUnassignedPositions(SocialGraph* SG)
 
             //printf("Position: %s in community %s, %d people\n", curPos.name, curCom->genericName, curPos.people->count);
 
-            if (curPos.people->count == 0)//< curPos.nbPeople)
+            if (curPos.people->count < curPos.nbPeople)
             {
-                printf("Unassigned position: %s in community %s\n", curPos.name, curCom->genericName);
+                printf("Unassigned position: %s in community %s (%d/%d)\n",
+                        curPos.name, curCom->genericName, curPos.people->count, curPos.nbPeople);
             }
         }
     }

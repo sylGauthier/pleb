@@ -28,14 +28,19 @@ int main()
 
     int i = 0;
 
-    for (i = 0; i < 10; i++)
+    /*for (i = 0; i < 10; i++)
     {
         socialPrintNode(SG, i);
-    }
+    }*/
 
     //saveGraph(SG, "test.graphml");
     
-    printf("\n\nInactive children (0-18 y.o): %d\n", nbInactives(SG, 0, 18));
+    for (i = 0; i < 100; i += 4)
+    {
+        printf("Inactive people (%d-%d y.o): %d\n", i, i+3, nbInactives(SG, i, i+3));
+    }
+
+    printUnassignedPositions(SG);
 
     socialFree(SG);
 

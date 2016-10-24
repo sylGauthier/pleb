@@ -1,6 +1,8 @@
 #ifndef VECTOR_H
 #define VECTOR_H
 
+#define CHUNK_SIZE 200
+
 struct Vector
 {
     int size;
