@@ -23,6 +23,13 @@ Vector* randRoute(int nb);
 //Generates a completely random identity
 void randID(SocialGraph *SG, struct identity* ID);
 
+//Generates a random knowAbout attribute. The closeness parameter makes the attribute more
+//credible (ie it will be much less likely for someone to know the mail address and age but
+//not the name of someone).
+//Closeness should range from 1 (not close, will know only sporadic information) to 10 (very
+//close, likely to know everything).
+void randKnowAbout(struct identity*, int closeness);
+
 //Generates a completely random personality
 void randPers(struct personality* pers);
 

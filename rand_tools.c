@@ -24,7 +24,9 @@ void randID(SocialGraph* SG, struct identity* ID)
     nameRandName(SG->NM, FRENCH, ID->sex, &(ID->firstName), &(ID->lastName));
 }
 
-void randKnowAbout(struct identity* 
+void randKnowAbout(struct identity*, int closeness)
+{
+}
 
 void randPers(struct personality* pers)
 {
