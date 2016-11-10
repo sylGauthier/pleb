@@ -6,7 +6,14 @@
 enum placeType
 {
     BUILDING = 0,
-    STREET = 1
+    STREET
+};
+
+enum buildingType
+{
+    OFFICE = 0,
+    HOUSE,
+    APPARTMENT
 };
 
 struct placeNode
@@ -18,7 +25,8 @@ struct placeNode
 
 struct placeBuilding
 {
-    int open;
+    int number;
+    enum buildingType
     int security;
 };
 
