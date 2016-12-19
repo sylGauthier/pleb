@@ -1,10 +1,10 @@
 BUILD := build
-DEPS :=
 PREFIX :=
-LIBS := -lxml2
-INCLUDES := /usr/include/libxml2
+DEPS := libxml-2.0
+CFLAGS := -g -Wall -std=c89 $(shell pkg-config --cflags $(DEPS)) -c
+LDFLAGS := $(shell pkg-config --libs $(DEPS))
 
-SOURCES := $(wildcard *.c)
+SOURCES := $(wildcard src/*.c)
 OBJECTS := $(addprefix $(BUILD)/,$(notdir $(SOURCES:.c=.o)))
 
 .PHONY: all
@@ -14,10 +14,10 @@ $(BUILD):
 	mkdir -p $@
 
 $(BUILD)/pleb: $(OBJECTS)
-	gcc -g -o $@ $(LIBS) $(OBJECTS)
+	gcc -g -o $@ $(LDFLAGS) $(OBJECTS)
 
-$(BUILD)/%.o:%.c
-	gcc -g -o $@ -Wall -I $(INCLUDES) -c $<
+$(BUILD)/%.o:src/%.c
+	gcc -o $@ $< $(CFLAGS)
 
 .PHONY: clean
 clean:

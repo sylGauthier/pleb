@@ -12,8 +12,8 @@ static void mapDeleteEdge(void* edge, void* data)
 static void mapPrintEdge(void* edge, void* data)
 {
     Vector* v = (Vector*) data;
-    int to = ((Edge*) (vectorAt(v, *(int*) edge)))->to;
-    printf(" -> %d\n", to);
+    Node* to = ((Edge*) (vectorAt(v, *(int*) edge)))->to;
+    printf(" -> %x\n", to);
 }
 
 static void mapListNodesIdTo(void* edge, void* list)
@@ -43,7 +43,7 @@ Graph* graphNew()
     return g;
 }
 
-int graphAddNode(Graph* g, void* attribute)
+Node* graphAddNode(Graph* g, void* attribute)
 {
     int n = g->nbNodes;
     Node* newNode = malloc(sizeof(Node));
@@ -54,27 +54,36 @@ int graphAddNode(Graph* g, void* attribute)
     vectorPush(g->nodes, newNode);
     g->nbNodes ++;
 
-    return n;
+    return newNode;
 }
 
-int graphAddEdge(Graph* g, int fromID, int toID, void* attribute)
+Edge* graphAddEdge(Graph* g, Node* fromPtr, Node* toPtr, void* attribute)
 {
     int eid = g->nbEdges;
     Edge* e = malloc(sizeof(Edge));
 
     e->ID = eid;
-    e->from = fromID;
-    e->to = toID;
+    e->from = fromPtr;
+    e->to = toPtr;
     e->attribute = attribute;
 
-    listPush(neighbours(g, fromID), &e->ID);
+    listPush(&(fromPtr->edges), e);
 
     vectorPush(g->edges, e);
     g->nbEdges ++;
 
-    return eid;
+    return e;
 }
 
+Node* graphGetNodeByIndex(Graph* g, int idx)
+{
+    if (idx >= 0 && idx < g->nbNodes)
+        return vectorAt(g->nodes, idx);
+    else
+        return NULL;
+}
+
+/*
 List graphGetNeighbours(Graph* g, int ID)
 {
     List l = NULL;
@@ -136,6 +145,8 @@ void* graphGetEdgeAttribute(Graph* g, int edgeID)
     return ((Edge*) g->edges->data[edgeID])->attribute;
 }
 
+*/
+
 struct mapPackage
 {
     void (*mapfun)(void* attr, void* dataIN);
@@ -178,30 +189,5 @@ void graphPrint(Graph* g)
 
     for (i = 0; i < g->nbNodes; i++)
     {
-        printf("Node %d :\n", ((Node*)(g->nodes->data[i]))->ID);
-        listMap(*neighbours(g, i), mapPrintEdge, g->edges);
     }
 }
-
-void graphPrintNeighbours(Graph* g, int nodeID)
-{
-    printIntList(*neighbours(g, nodeID));
-}
-
-void graphFree(Graph* g)
-{
-    int i = 0;
-
-    for (i = 0; i < g->nbNodes; i++)
-    {
-        listMap(*neighbours(g, i), mapDeleteEdge, NULL);
-        listFree(neighbours(g, i));
-        free(g->nodes->data[i]);
-    }
-
-    vectorFree(g->nodes);
-    vectorFree(g->edges);
-
-    free(g);
-}
-

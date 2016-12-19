@@ -35,8 +35,9 @@ struct nameManager
 
 struct nameManager* nameNewManager();
 
-//Loads names of the given race and sex from a file, FN = 1 for first names, any other
-//value for last names.
+/*Loads names of the given race and sex from a file, FN = 1 for first names, any other
+ *value for last names.
+ */
 void nameLoadFromFile(struct nameManager* NM, char* fileName, int race, int sex, int FN);
 void namePrintAll(struct nameManager* NM, int race, int sex, int FN);
 

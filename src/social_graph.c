@@ -15,60 +15,59 @@ SocialGraph* socialNew()
     return sg;
 }
 
-int socialAddNode(SocialGraph* SG, struct nodeAttrib attrib)
+Node* socialAddNode(SocialGraph* SG, struct nodeAttrib attrib)
 {
     struct nodeAttrib* na = malloc(sizeof(struct nodeAttrib));
 
     if (na)
     {
         memcpy(na, &attrib, sizeof(struct nodeAttrib));
-        na->nodeID =  graphAddNode(SG->G, na);
         na->positions = vectorNew();
 
-        return na->nodeID;
+        return graphAddNode(SG->G, na);
     }
     else
     {
         fprintf(stderr, "Error ! Could not allocate memory for node attribute !\n");
-        return -1;
+        return NULL;
     }
 }
 
-int socialAddRelation(SocialGraph* SG, int nodeFrom, int nodeTo, struct relationAttrib attrib)
+Edge* socialAddRelation(SocialGraph* SG, Node* fromPtr, Node* toPtr, struct relationAttrib attrib)
 {
     struct relationAttrib* ra = malloc(sizeof(struct relationAttrib));
 
     if (ra)
     {
         memcpy(ra, &attrib, sizeof(struct relationAttrib));
-        ra->edgeID = graphAddEdge(SG->G, nodeFrom, nodeTo, ra);
 
-        return ra->edgeID;
+        return graphAddEdge(SG->G, fromPtr, toPtr, ra);
     }
     else
     {
         fprintf(stderr, "Error ! Could not allocate memory for edge attribute !\n");
-        return -1;
+        return NULL;
     }
 }
 
-int socialIsMated(SocialGraph* SG, int n)
+Node* socialIsMated(SocialGraph* SG, Node* node)
 {
-    List nbs = graphGetEdgesFrom(SG->G, n);
+    List nbs = node->edges;
 
     while (nbs)
     {
-        int* edgeIndex = listPop(&nbs);
-        struct relationAttrib* ea = graphGetEdgeAttribute(SG->G, *edgeIndex);
+        Edge* curEdge = nbs->elem;
+        struct relationAttrib* ea = curEdge->attribute;
 
         if (ea->familyRel == COUPLE)
         {
-            listFree(&nbs);
-            return graphGetNodeTo(SG->G, ea->edgeID);
+            return curEdge->to;
         }
+
+        nbs = nbs->next;
     }
 
-    return -1;
+    return NULL;
 }
 
 static void printPeopleCallback(void* attr, void* data)
@@ -88,7 +87,7 @@ static void printPeopleCallback(void* attr, void* data)
 
         printf("Works at %s as %s\n", com->specificName, pos->name);
     }
-
+/*
     List nb = graphGetEdgesFrom(sg->G, na->nodeID);
 
     int* curNB;
@@ -124,7 +123,7 @@ static void printPeopleCallback(void* attr, void* data)
 
         printf("Allegiance: %d, Attachment: %d\n", ea->perc.allegiance, ea->perc.attachment);
     }
-
+*/
     printf("##################\n\n");
 }
 
@@ -134,9 +133,9 @@ void socialPrintPeople(SocialGraph* SG)
     graphMapNodes(SG->G, printPeopleCallback, SG);
 }
 
-void socialPrintNode(SocialGraph* SG, int ID)
+void socialPrintNode(SocialGraph* SG, Node* node)
 {
-    struct nodeAttrib* na = graphGetNodeAttribute(SG->G, ID);
+    struct nodeAttrib* na = node->attribute;
 
     printPeopleCallback(na, SG);
 }
@@ -176,7 +175,7 @@ void freeCallback(void* attr, void* data)
 void freeNodeCallback(void* attr, void* data)
 {
     struct nodeAttrib* cur = attr;
-    //No listFlush because positions are freed with the freeCommunities method
+    /*No listFlush because positions are freed with the freeCommunities method*/
     vectorFree(cur->positions);
     free(cur);
 }

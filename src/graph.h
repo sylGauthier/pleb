@@ -22,16 +22,17 @@ typedef struct Node
 typedef struct Edge
 {
     int ID;
-    int from;
-    int to;
+    struct Node* from;
+    struct Node* to;
     void* attribute;
 } Edge;
 
 Graph* graphNew();
 
-int graphAddNode(Graph* g, void* attribute);
-int graphAddEdge(Graph* g, int fromID, int toID, void* attribute);
+Node* graphAddNode(Graph* g, void* attribute);
+Edge* graphAddEdge(Graph* g, struct Node* fromPtr, struct Node* toPtr, void* attribute);
 
+/*
 List graphGetNeighbours(Graph* g, int nodeID);
 
 void* graphGetNodeAttribute(Graph* g, int nodeID);
@@ -43,6 +44,7 @@ int graphGetNodeTo(Graph* g, int edgeID);
 List graphGetEdgesFrom(Graph* g, int nodeID);
 List graphGetEdgesTo(Graph* g, int nodeID);
 int graphGetEdgeBetween(Graph* g, int nodeFrom, int nodeTo);
+*/
 
 void graphMapNodes(Graph* g, void (*mapfun)(void* attr, void* dataIn), void* data);
 void graphMapEdges(Graph* g, void (*mapfun)(void* attr, void* dataIn), void* data);

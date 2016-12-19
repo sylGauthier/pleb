@@ -71,14 +71,14 @@ struct relationAttrib
 
 SocialGraph* socialNew();
 
-int socialAddNode(SocialGraph* SG, struct nodeAttrib);
-int socialAddRelation(SocialGraph* SG, int nf, int nt, struct relationAttrib);
+Node* socialAddNode(SocialGraph* SG, struct nodeAttrib);
+Edge* socialAddRelation(SocialGraph* SG, Node* fromPtr, Node* toPtr, struct relationAttrib);
 
-//Returns the ID of the soulmate or -1 if none
-int socialIsMated(SocialGraph* SG, int n);
+/*Returns the ID of the soulmate or -1 if none*/
+Node* socialIsMated(SocialGraph* SG, Node* n);
 
 void socialPrintPeople(SocialGraph* SG);
-void socialPrintNode(SocialGraph* SG, int ID);
+void socialPrintNode(SocialGraph* SG, Node* node);
 void printAgePyramid(SocialGraph* SG);
 
 void socialFree(SocialGraph* SG);

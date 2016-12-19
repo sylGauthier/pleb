@@ -33,14 +33,14 @@ static void createCouple(SocialGraph* SG, int n1, int n2)
     socialAddRelation(SG, n2, n1, ra2);
 }
 
-int generateNode(SocialGraph* SG)
+/*int generateNode(SocialGraph* SG)
 {
     struct nodeAttrib* na = malloc(sizeof(struct nodeAttrib));
     randID(SG, &na->ID);
     randPers(&na->pers);
 
     return graphAddNode(SG->G, na);
-}
+}*/
 
 static int randBinom(int n)
 {

@@ -3,7 +3,7 @@
 
 #include "social_graph.h"
 
-int generateNode(SocialGraph* SG);
+//int generateNode(SocialGraph* SG);
 
 void generatePeople(SocialGraph* SG, int nb);
 int generateFamilies(SocialGraph* SG);

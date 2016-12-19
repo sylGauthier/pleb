@@ -14,7 +14,7 @@ struct position
     int minAge;
     int maxAge;
 
-    //Percentage of time this position occupies in the node's schedule
+    /*Percentage of time this position occupies in the node's schedule*/
     int timeRatio;
 
     char name[25];
@@ -31,7 +31,7 @@ struct positionTemplate
     int minAge;
     int maxAge;
 
-    //Percentage of time this position occupies in the node's schedule
+    /*Percentage of time this position occupies in the node's schedule*/
     int timeRatioMin;
     int timeRatioMax;
 
@@ -64,10 +64,10 @@ struct communityTemplate
 
     char genericName[20];
 
-    //How many people in the network for one community of this type
+    /*How many people in the network for one community of this type*/
     int quota;
 
-    //If quota = 0, this indicates the absolute number of this kind of community
+    /*If quota = 0, this indicates the absolute number of this kind of community*/
     int number;
 };
 
@@ -84,8 +84,9 @@ int communityLoadTemplatesFromFile(struct communityManager* CM, char* filename);
 void communityPrintTemplates(struct communityManager* CM);
 void communityPrintCommunities(struct communityManager* CM);
 
-//Note: all we need to create empty, "abstract" communities is the number of people in
-//the network. Then we "fill" those communities with people in social_generation
+/*Note: all we need to create empty, "abstract" communities is the number of people in
+ *the network. Then we "fill" those communities with people in social_generation
+ */
 void communityGenerateFromTemplates(struct communityManager* CM, int nbPeople);
 
 void communityFree(struct communityManager* CM);
