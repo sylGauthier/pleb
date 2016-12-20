@@ -33,7 +33,7 @@ int main()
         socialPrintNode(SG, i);
     }*/
 
-    //saveGraph(SG, "test.graphml");
+    /*saveGraph(SG, "test.graphml");*/
     
     for (i = 0; i < 100; i += 4)
     {

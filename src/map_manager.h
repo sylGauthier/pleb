@@ -19,7 +19,7 @@ struct mapNode
 struct mapBuilding
 {
     int number;
-    int buildingType
+    int buildingType;
     int security;
 };
 

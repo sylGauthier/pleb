@@ -24,7 +24,7 @@ void randID(SocialGraph* SG, struct identity* ID)
     nameRandName(SG->NM, FRENCH, ID->sex, &(ID->firstName), &(ID->lastName));
 }
 
-void randKnowAbout(struct identity*, int closeness)
+void randKnowAbout(struct identity* ID, int closeness)
 {
 }
 
@@ -59,17 +59,24 @@ Vector* randRoute(int nb)
         vectorPush(v, newElem);
     }
 
-    vectorShuffle(v);
+    randShuffle(v);
 
     return v;
 }
 
+void randShuffle(Vector* v)
+{
+    int i = 0;
+
+    for (i = v->count - 1; i > 0; i--)
+    {
+        int j = rand() % (i+1);
+        void* tmp = v->data[i];
+        v->data[i] = v->data[j];
+        v->data[j] = tmp;
+    }
+}
+
 void randRel(struct relationAttrib* ra, int relType)
 {
-    switch (relType)
-    {
-        case COLLEAGUE :
-            ra->familyRel = NONE;
-            ra->knowAbout
-    }
 }

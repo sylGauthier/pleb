@@ -246,7 +246,6 @@ void communityGenerateFromTemplates(struct communityManager* CM, int nbPeople)
 
             int k = 0;
 
-            //*newC = *curT;
             newC->ID = communityID;
             newC->nbPositions = curT->nbPositions;
 
@@ -267,7 +266,7 @@ void communityGenerateFromTemplates(struct communityManager* CM, int nbPeople)
             }
 
             strncpy(newC->genericName, curT->genericName, 20);
-            snprintf(newC->specificName, 20, "%s%d", curT->genericName, j);
+            sprintf(newC->specificName, "%s%d", curT->genericName, j);
 
             vectorPush(CM->communities, newC);
             communityID++;
@@ -287,7 +286,6 @@ static void freePosClbk(void* com, void* data)
 
     for (i = 0; i < cur->nbPositions; i++)
     {
-        vectorFlush(cur->positions[i].people);
         vectorFree(cur->positions[i].people);
     }
 }

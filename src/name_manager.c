@@ -39,7 +39,7 @@ void nameLoadFromFile(struct nameManager* NM, char* fileName, int race, int sex,
     {
         curName = malloc(20*sizeof(char));
 
-        //To avoid valgrind annoying error of "cond jump depends on uninitialized value"
+        /*To avoid valgrind annoying error of "cond jump depends on uninitialized value"*/
         strncpy(curName, "--------------------", 20);
         vectorPush(target, curName);
 
@@ -60,7 +60,7 @@ void nameLoadFromFile(struct nameManager* NM, char* fileName, int race, int sex,
 
     } while (res != NULL);
 
-    free(vectorPop(target)); //The last element corresponds to an empty line so we don't want to keep it.
+    free(vectorPop(target)); /*The last element corresponds to an empty line so we don't want to keep it.*/
     count--;
     NM->selectors[FN][race*2 + sex].nb = count;
 

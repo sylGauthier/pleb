@@ -45,7 +45,6 @@ static void listcpyclbk(void* elem, void* data)
 {
     List* l = data;
     listPush(l, elem);
-    //printf("pl %d\n", *((int*)elem));
 }
 
 void listCopy(List l1, List* l2)

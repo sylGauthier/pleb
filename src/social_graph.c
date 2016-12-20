@@ -70,10 +70,9 @@ Node* socialIsMated(SocialGraph* SG, Node* node)
     return NULL;
 }
 
-static void printPeopleCallback(void* attr, void* data)
+static void printPeopleClbk(Node* node, void* data)
 {
-    struct nodeAttrib* na = attr;
-    struct relationAttrib* ea = NULL;
+    struct nodeAttrib* na = node->attribute;
     SocialGraph* sg = data;
 
     printf("### Individual ###\nID: %d\nName: %s %s\nAge: %d\nSex: %s\n",
@@ -130,20 +129,18 @@ static void printPeopleCallback(void* attr, void* data)
 void socialPrintPeople(SocialGraph* SG)
 {
     printf("Printing social graph...\n\n");
-    graphMapNodes(SG->G, printPeopleCallback, SG);
+    graphMapNodes(SG->G, printPeopleClbk, SG);
 }
 
 void socialPrintNode(SocialGraph* SG, Node* node)
 {
-    struct nodeAttrib* na = node->attribute;
-
-    printPeopleCallback(na, SG);
+    printPeopleClbk(node, SG);
 }
 
-static void buildAgePyramidCallback(void* attr, void* pyramid)
+static void buildAgePyramidClbk(Node* node, void* pyramid)
 {
     int* pyr = pyramid;
-    struct nodeAttrib* na = attr;
+    struct nodeAttrib* na = node->attribute;
 
     pyr[na->ID.age]++;
 }
@@ -153,7 +150,7 @@ void printAgePyramid(SocialGraph* SG)
     int pyramid[110] = {0};
     int i = 0;
 
-    graphMapNodes(SG->G, buildAgePyramidCallback, pyramid);
+    graphMapNodes(SG->G, buildAgePyramidClbk, pyramid);
 
     for (i = 0; i < 110; i++)
     {
@@ -167,14 +164,15 @@ void printAgePyramid(SocialGraph* SG)
     }
 }
 
-void freeCallback(void* attr, void* data)
+static void freeEdgeAttrClbk(Edge* edge, void* data)
 {
-    free(attr);
+    struct relationAttrib* cur = edge->attribute;
+    free(cur);
 }
 
-void freeNodeCallback(void* attr, void* data)
+static void freeNodeAttrClbk(Node* node, void* data)
 {
-    struct nodeAttrib* cur = attr;
+    struct nodeAttrib* cur = node->attribute;
     /*No listFlush because positions are freed with the freeCommunities method*/
     vectorFree(cur->positions);
     free(cur);
@@ -183,8 +181,8 @@ void freeNodeCallback(void* attr, void* data)
 void socialFree(SocialGraph* sg)
 {
     printf("Freeing social graph...\n");
-    graphMapNodes(sg->G, freeNodeCallback, NULL);
-    graphMapEdges(sg->G, freeCallback, NULL);
+    graphMapNodes(sg->G, freeNodeAttrClbk, NULL);
+    graphMapEdges(sg->G, freeEdgeAttrClbk, NULL);
     graphFree(sg->G);
     
     nameFreeManager(sg->NM);

@@ -32,25 +32,8 @@ Graph* graphNew();
 Node* graphAddNode(Graph* g, void* attribute);
 Edge* graphAddEdge(Graph* g, struct Node* fromPtr, struct Node* toPtr, void* attribute);
 
-/*
-List graphGetNeighbours(Graph* g, int nodeID);
-
-void* graphGetNodeAttribute(Graph* g, int nodeID);
-void* graphGetEdgeAttribute(Graph* g, int edgeID);
-
-int graphGetNodeFrom(Graph* g, int edgeID);
-int graphGetNodeTo(Graph* g, int edgeID);
-
-List graphGetEdgesFrom(Graph* g, int nodeID);
-List graphGetEdgesTo(Graph* g, int nodeID);
-int graphGetEdgeBetween(Graph* g, int nodeFrom, int nodeTo);
-*/
-
-void graphMapNodes(Graph* g, void (*mapfun)(void* attr, void* dataIn), void* data);
-void graphMapEdges(Graph* g, void (*mapfun)(void* attr, void* dataIn), void* data);
-
-void graphPrint(Graph* g);
-void graphPrintNeighbours(Graph* g, int nodeID);
+void graphMapNodes(Graph* g, void (*mapfun)(Node* node, void* dataIn), void* data);
+void graphMapEdges(Graph* g, void (*mapfun)(Edge* edge, void* dataIn), void* data);
 
 void graphFree(Graph* g);
 

@@ -49,19 +49,6 @@ void vectorMap(Vector vec, void (*mapfun)(void* elem, void* dataIn), void* data)
     }
 }
 
-void vectorShuffle(Vector* v)
-{
-    int i = 0;
-
-    for (i = v->count - 1; i > 0; i--)
-    {
-        int j = rand() % (i+1);
-        void* tmp = v->data[i];
-        v->data[i] = v->data[j];
-        v->data[j] = tmp;
-    }
-}
-
 void* vectorAt(Vector* v, int i)
 {
     if (v)
