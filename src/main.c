@@ -12,13 +12,13 @@ int main()
     int nbPeople = 100000;
     SocialGraph* SG = socialNew();
 
-    communityLoadTemplatesFromFile(SG->CM, "plop.xml");
+    communityLoadTemplatesFromFile(SG->CM, "data/plop.xml");
     communityGenerateFromTemplates(SG->CM, nbPeople);
 
-    nameLoadFromFile(SG->NM, "firstNamesFRFemales.txt", FRENCH, FEMALE, FIRST_NAME);
-    nameLoadFromFile(SG->NM, "firstNamesFRMales.txt", FRENCH, MALE, FIRST_NAME);
-    nameLoadFromFile(SG->NM, "lastNamesFR.txt", FRENCH, FEMALE, LAST_NAME);
-    nameLoadFromFile(SG->NM, "lastNamesFR.txt", FRENCH, MALE, LAST_NAME);
+    nameLoadFromFile(SG->NM, "data/firstNamesFRFemales.txt", FRENCH, FEMALE, FIRST_NAME);
+    nameLoadFromFile(SG->NM, "data/firstNamesFRMales.txt", FRENCH, MALE, FIRST_NAME);
+    nameLoadFromFile(SG->NM, "data/lastNamesFR.txt", FRENCH, FEMALE, LAST_NAME);
+    nameLoadFromFile(SG->NM, "data/lastNamesFR.txt", FRENCH, MALE, LAST_NAME);
 
     generatePeople(SG, nbPeople);
 
