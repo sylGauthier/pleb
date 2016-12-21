@@ -14,7 +14,7 @@ $(BUILD):
 	mkdir -p $@
 
 $(BUILD)/pleb: $(OBJECTS)
-	gcc -g -o $@ $(LDFLAGS) $(OBJECTS)
+	gcc -g -o $@ $(OBJECTS) $(LDFLAGS)
 
 $(BUILD)/%.o:src/%.c
 	gcc -o $@ $< $(CFLAGS)

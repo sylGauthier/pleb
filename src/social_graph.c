@@ -181,8 +181,11 @@ static void freeNodeAttrClbk(Node* node, void* data)
 void socialFree(SocialGraph* sg)
 {
     printf("Freeing social graph...\n");
+    printf("  ->Freeing nodes...\n");
     graphMapNodes(sg->G, freeNodeAttrClbk, NULL);
+    printf("  ->Freeing edges...\n");
     graphMapEdges(sg->G, freeEdgeAttrClbk, NULL);
+    printf("  ->Freeing graph...\n");
     graphFree(sg->G);
     
     nameFreeManager(sg->NM);

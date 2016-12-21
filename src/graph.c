@@ -106,6 +106,8 @@ static void freeNodeClbk(Node* node, void* data)
 void graphFree(Graph* g)
 {
     graphMapNodes(g, freeNodeClbk, NULL);
-    vectorFlush(g->edges);
+    vectorFree(g->nodes);
     vectorFree(g->edges);
+
+    free(g);
 }

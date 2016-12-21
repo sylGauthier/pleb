@@ -129,7 +129,7 @@ static void integrateInSiblings(SocialGraph* SG, Node* child, Node* parent)
     /*We search every other child of the parent...*/
     while (l)
     {
-        Edge* e = listPop(&l);
+        Edge* e = l->elem;
         struct relationAttrib* ra = e->attribute;
 
         /*And when we find one we create a link with the new child*/
@@ -161,6 +161,8 @@ static void integrateInSiblings(SocialGraph* SG, Node* child, Node* parent)
                 }
             }
         }
+
+        l = l->next;
     }
 }
 
@@ -211,6 +213,8 @@ static int canBeParent(SocialGraph* SG, Node* child, Node* parent)
             {
                 return 0; /*Youre goddamn right they can't be related, hell this isn't England.*/
             }
+
+            l = l->next;
         }
     }
 
@@ -227,7 +231,7 @@ static void generateFamiliesClbk(Node* child, void* socialGraph)
 
     do
     {
-        Node* parent = SG->G->nodes->data[parentID];
+        Node* parent = vectorAt(SG->G->nodes, parentID);
 
         if (canBeParent(SG, child, parent))
         {
@@ -288,6 +292,8 @@ int generateFamilies(SocialGraph* SG)
     /*Creates families, ie associates some children with some parents according to a set of constraints*/
     /*There can be single parents*/
     graphMapNodes(SG->G, generateFamiliesClbk, SG);
+
+    printf("Done\n");
 
     return count;
 }

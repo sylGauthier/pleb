@@ -62,17 +62,31 @@ void printUnassignedPositions(SocialGraph* SG)
     }
 }
 
-static void countInactivesClbk(Node* curNode, void* cpt)
+struct countInactivesClbkData
+{
+    int* cpt;
+    int minAge;
+    int maxAge;
+};
+
+static void countInactivesClbk(Node* curNode, void* data)
 {
     struct nodeAttrib* na = curNode->attribute;
+    struct countInactivesClbkData* d = data;
 
-    if (na->positions->count == 0)
-        *((int*) cpt) = *((int*) cpt) + 1;
+    if (na->positions->count == 0 && na->ID.age >= d->minAge && na->ID.age <= d->maxAge)
+        *(d->cpt) = *(d->cpt) + 1;
 }
 
 int nbInactives(SocialGraph* SG, int minAge, int maxAge)
 {
     int cpt = 0;
-    graphMapNodes(SG->G, countInactivesClbk, &cpt);
+    struct countInactivesClbkData data;
+
+    data.cpt = &cpt;
+    data.minAge = minAge;
+    data.maxAge = maxAge;
+
+    graphMapNodes(SG->G, countInactivesClbk, &data);
     return cpt;
 }
