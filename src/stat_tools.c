@@ -2,10 +2,10 @@
 
 #include "stat_tools.h"
 
-static void countOrphansClbk(Node* curNode, void* cpt)
+static void count_orphans_clbk(Node* curNode, void* cpt)
 {
     int* c = cpt;
-    struct nodeAttrib* na = curNode->attribute;
+    struct NodeAttrib* na = curNode->attribute;
 
     if (na->ID.age <= 18)
     {
@@ -16,7 +16,7 @@ static void countOrphansClbk(Node* curNode, void* cpt)
         while (l)
         {
             Edge* e = l->elem;
-            struct relationAttrib* ra = e->attribute;
+            struct RelationAttrib* ra = e->attribute;
 
             if (ra->familyRel == PARENT)
             {
@@ -29,27 +29,27 @@ static void countOrphansClbk(Node* curNode, void* cpt)
     }
 }
 
-int statCountOrphanKids(SocialGraph* SG)
+int stat_count_orphan_kids(SocialGraph* SG)
 {
     int c = 0;
-    graphMapNodes(SG->G,countOrphansClbk, &c);
+    graph_map_nodes(SG->G,count_orphans_clbk, &c);
     return c;
 }
 
-void printUnassignedPositions(SocialGraph* SG)
+void print_unassigned_positions(SocialGraph* SG)
 {
     printf("Printing unassigned positions...\n");
     int i = 0;
 
     for (i = 0; i < SG->CM->communities->count; i++)
     {
-        struct community* curCom = SG->CM->communities->data[i];
+        struct Community* curCom = vector_at(SG->CM->communities, i);
 
         int j = 0;
 
         for (j = 0; j < curCom->nbPositions; j++)
         {
-            struct position curPos = curCom->positions[j];
+            struct Position curPos = curCom->positions[j];
 
             /*printf("Position: %s in community %s, %d people\n", curPos.name, curCom->genericName, curPos.people->count);*/
 
@@ -62,31 +62,31 @@ void printUnassignedPositions(SocialGraph* SG)
     }
 }
 
-struct countInactivesClbkData
+struct CountInactivesClbkData
 {
     int* cpt;
     int minAge;
     int maxAge;
 };
 
-static void countInactivesClbk(Node* curNode, void* data)
+static void count_inactives_clbk(Node* curNode, void* data)
 {
-    struct nodeAttrib* na = curNode->attribute;
-    struct countInactivesClbkData* d = data;
+    struct NodeAttrib* na = curNode->attribute;
+    struct CountInactivesClbkData* d = data;
 
     if (na->positions->count == 0 && na->ID.age >= d->minAge && na->ID.age <= d->maxAge)
         *(d->cpt) = *(d->cpt) + 1;
 }
 
-int nbInactives(SocialGraph* SG, int minAge, int maxAge)
+int nb_inactives(SocialGraph* SG, int minAge, int maxAge)
 {
     int cpt = 0;
-    struct countInactivesClbkData data;
+    struct CountInactivesClbkData data;
 
     data.cpt = &cpt;
     data.minAge = minAge;
     data.maxAge = maxAge;
 
-    graphMapNodes(SG->G, countInactivesClbk, &data);
+    graph_map_nodes(SG->G, count_inactives_clbk, &data);
     return cpt;
 }

@@ -3,7 +3,7 @@
 
 #include "rand_tools.h"
 
-int randAge()
+int rand_age()
 {
     int a = rand()%1001;
 
@@ -16,29 +16,29 @@ int randAge()
     }
 }
 
-void randID(SocialGraph* SG, struct identity* ID)
+void rand_id(SocialGraph* SG, struct Identity* ID)
 {
-    ID->age = randAge();
+    ID->age = rand_age();
     ID->sex = rand() % 2;
 
-    nameRandName(SG->NM, FRENCH, ID->sex, &(ID->firstName), &(ID->lastName));
+    name_rand_name(SG->NM, FRENCH, ID->sex, &(ID->firstName), &(ID->lastName));
 }
 
-void randKnowAbout(struct identity* ID, int closeness)
+void rand_know_about(struct Identity* ID, int closeness)
 {
 }
 
-void randPers(struct personality* pers)
+void rand_pers(struct Personality* pers)
 {
-    *pers = (struct personality) {(rand()%5 + rand()%6) + 1, rand()%10 + 1, rand()%10 + 1};
+    *pers = (struct Personality) {(rand()%5 + rand()%6) + 1, rand()%10 + 1, rand()%10 + 1};
 }
 
-void randPerc(struct perception* perc)
+void rand_perc(struct Perception* perc)
 {
-    *perc = (struct perception) {1,2};
+    *perc = (struct Perception) {1,2};
 }
 
-int randUniform(int a, int b)
+int rand_uniform(int a, int b)
 {    
     if (a >= b)
         return a;
@@ -46,9 +46,9 @@ int randUniform(int a, int b)
         return a + rand() % (b - a);
 }
 
-Vector* randRoute(int nb)
+Vector* rand_route(int nb)
 {
-    Vector* v = vectorNew();
+    Vector* v = vector_new();
     int i = 0;
 
     for (i = 0; i < nb; i++)
@@ -56,15 +56,15 @@ Vector* randRoute(int nb)
         int* newElem = malloc(sizeof(int));
 
         *newElem = i;
-        vectorPush(v, newElem);
+        vector_push(v, newElem);
     }
 
-    randShuffle(v);
+    rand_shuffle(v);
 
     return v;
 }
 
-void randShuffle(Vector* v)
+void rand_shuffle(Vector* v)
 {
     int i = 0;
 
@@ -77,6 +77,6 @@ void randShuffle(Vector* v)
     }
 }
 
-void randRel(struct relationAttrib* ra, int relType)
+void rand_rel(struct RelationAttrib* ra, int relType)
 {
 }

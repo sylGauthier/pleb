@@ -27,14 +27,14 @@ typedef struct Edge
     void* attribute;
 } Edge;
 
-Graph* graphNew();
+Graph* graph_new();
 
-Node* graphAddNode(Graph* g, void* attribute);
-Edge* graphAddEdge(Graph* g, struct Node* fromPtr, struct Node* toPtr, void* attribute);
+Node* graph_add_node(Graph* g, void* attribute);
+Edge* graph_add_edge(Graph* g, Node* fromPtr, Node* toPtr, void* attribute);
 
-void graphMapNodes(Graph* g, void (*mapfun)(Node* node, void* dataIn), void* data);
-void graphMapEdges(Graph* g, void (*mapfun)(Edge* edge, void* dataIn), void* data);
+void graph_map_nodes(Graph* g, void (*mapfun)(Node* node, void* dataIn), void* data);
+void graph_map_edges(Graph* g, void (*mapfun)(Edge* edge, void* dataIn), void* data);
 
-void graphFree(Graph* g);
+void graph_free(Graph* g);
 
 #endif

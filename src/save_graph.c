@@ -4,7 +4,7 @@
 
 char* familyRelNames[10];
 
-static void writeHeader(FILE *f)
+static void write_header(FILE *f)
 {
     fprintf(f, "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
             "<graphml xmlns=\"http://graphml.graphdrawing.org/xmlns\""
@@ -21,40 +21,40 @@ static void writeHeader(FILE *f)
             "<graph id=\"G\" edgedefault=\"directed\">\n");
 }
 
-static void writeFooter(FILE *f)
+static void write_footer(FILE *f)
 {
     fprintf(f, "</graph>\n</graphml>");
 }
 
-struct writeClbkData
+struct WriteClbkData
 {
     FILE* file;
     SocialGraph* SG;
 };
 
-static void writeNodeClbk(Node* node, void* data)
+static void write_node_clbk(Node* node, void* data)
 {
-    struct writeClbkData* cd = data;
-    struct nodeAttrib* na = node->attribute;
+    struct WriteClbkData* cd = data;
+    struct NodeAttrib* na = node->attribute;
 
     fprintf(cd->file, "<node id=\"n%d\">\n"
             "<data key=\"d0\">blue</data>\n"
             "<data key=\"d1\">%d</data>\n"
             "<data key=\"d3\">%s</data>\n"
             "<data key=\"d4\">%s</data>\n"
-            "</node>\n", na->nodeID, na->ID.age, nameGetFirstName(cd->SG->NM, na->ID.firstName), nameGetLastName(cd->SG->NM, na->ID.lastName));
+            "</node>\n", na->nodeID, na->ID.age, name_get_first_name(cd->SG->NM, na->ID.firstName), name_get_last_name(cd->SG->NM, na->ID.lastName));
 }
 
-static void writeEdgeClbk(Edge* edge, void* data)
+static void write_edge_clbk(Edge* edge, void* data)
 {
-    struct writeClbkData* cd = data;
-    struct relationAttrib* ra = edge->attribute;
+    struct WriteClbkData* cd = data;
+    struct RelationAttrib* ra = edge->attribute;
     if (ra->familyRel != CHILD)
         fprintf(cd->file, "<edge id=\"e%d\" source=\"n%d\" target=\"n%d\">\n  <data key=\"d2\"> %s </data>\n</edge>\n",
                 ra->edgeID, edge->from->ID, edge->to->ID, familyRelNames[ra->familyRel]);
 }
 
-void saveGraph(SocialGraph* SG, const char* fileName)
+void save_graph(SocialGraph* SG, const char* fileName)
 {
     familyRelNames[0] = "NONE";
     familyRelNames[1] = "GRANDPARENT";
@@ -69,17 +69,17 @@ void saveGraph(SocialGraph* SG, const char* fileName)
 
     printf("Writing graph to %s\n", fileName);
     FILE* f = fopen(fileName, "w");
-    struct writeClbkData clbkData;
+    struct WriteClbkData clbkData;
 
     clbkData.file = f;
     clbkData.SG = SG;
 
-    writeHeader(f);
+    write_header(f);
 
-    graphMapNodes(SG->G, writeNodeClbk, &clbkData);
-    graphMapEdges(SG->G, writeEdgeClbk, &clbkData);
+    graph_map_nodes(SG->G, write_node_clbk, &clbkData);
+    graph_map_edges(SG->G, write_edge_clbk, &clbkData);
 
-    writeFooter(f);
+    write_footer(f);
 
     fclose(f);
 }

@@ -3,7 +3,7 @@
 
 #include "vector.h"
 
-struct position
+struct Position
 {
     int communityID;
     int hierarchy;
@@ -22,7 +22,7 @@ struct position
     int type;
 };
 
-struct positionTemplate
+struct PositionTemplate
 {
     int hierarchy;
     int nbPeopleMax, nbPeopleMin;
@@ -40,27 +40,27 @@ struct positionTemplate
     int type;
 };
 
-enum POSITION_TYPE
+enum PositionType
 {
     WORK = 0,
     LEISURE
 };
 
-struct community
+struct Community
 {
     int ID;
 
     int nbPositions;
-    struct position positions[20];
+    struct Position positions[20];
 
     char genericName[20];
     char specificName[20];
 };
 
-struct communityTemplate
+struct CommunityTemplate
 {
     int nbPositions;
-    struct positionTemplate positions[20];
+    struct PositionTemplate positions[20];
 
     char genericName[20];
 
@@ -71,25 +71,25 @@ struct communityTemplate
     int number;
 };
 
-struct communityManager
+typedef struct CommunityManager
 {
     int nbPositions;
     Vector* communities;
     Vector* templates;
-};
+} CommunityManager;
 
-struct communityManager*  communityNewManager();
+CommunityManager*  community_new_manager();
 
-int communityLoadTemplatesFromFile(struct communityManager* CM, char* filename);
-void communityPrintTemplates(struct communityManager* CM);
-void communityPrintCommunities(struct communityManager* CM);
+int community_load_templates_from_file(CommunityManager* CM, char* filename);
+void community_print_templates(CommunityManager* CM);
+void community_print_communities(CommunityManager* CM);
 
 /*Note: all we need to create empty, "abstract" communities is the number of people in
  *the network. Then we "fill" those communities with people in social_generation
  */
-void communityGenerateFromTemplates(struct communityManager* CM, int nbPeople);
+void community_generate_from_templates(CommunityManager* CM, int nbPeople);
 
-void communityFree(struct communityManager* CM);
+void community_free(CommunityManager* CM);
 
 
 #endif

@@ -4,13 +4,13 @@
 #include "social_generation.h"
 #include "rand_tools.h"
 
-static void createCouple(SocialGraph* SG, Node* n1, Node* n2)
+static void create_couple(SocialGraph* SG, Node* n1, Node* n2)
 {
-    struct relationAttrib ra1;
-    struct relationAttrib ra2;
+    struct RelationAttrib ra1;
+    struct RelationAttrib ra2;
 
-    struct nodeAttrib* na1 = n1->attribute;
-    struct nodeAttrib* na2 = n2->attribute;
+    struct NodeAttrib* na1 = n1->attribute;
+    struct NodeAttrib* na2 = n2->attribute;
  
     if (na1->ID.sex == MALE)
         na2->ID.lastName = na1->ID.lastName;
@@ -29,33 +29,33 @@ static void createCouple(SocialGraph* SG, Node* n1, Node* n2)
     ra1.perc.attachment = rand()%4 + 7;
     ra2.perc.attachment = rand()%4 + 7;
 
-    socialAddRelation(SG, n1, n2, ra1);
-    socialAddRelation(SG, n2, n1, ra2);
+    social_add_relation(SG, n1, n2, ra1);
+    social_add_relation(SG, n2, n1, ra2);
 }
 
-static int randBinom(int n)
+static int rand_binom(int n)
 {
     return rand()%n + rand()%n;
 }
 
-void generatePeople(SocialGraph* SG, int nb)
+void generate_people(SocialGraph* SG, int nb)
 {
     int i = 0;
-    struct nodeAttrib na;
+    struct NodeAttrib na;
 
     for (i = 0; i < nb; i++)
     {
-        randID(SG, &na.ID);
-        randPers(&na.pers);
+        rand_id(SG, &na.ID);
+        rand_pers(&na.pers);
 
-        socialAddNode(SG, na);
+        social_add_node(SG, na);
     }
 }
 
 static void affiliate(SocialGraph* SG, Node* child, Node* parent)
 {
-    struct nodeAttrib* naParent = parent->attribute;
-    struct nodeAttrib* naChild = child->attribute;
+    struct NodeAttrib* naParent = parent->attribute;
+    struct NodeAttrib* naChild = child->attribute;
 
     /*Here we propagate the name through all the generations starting with the
      *child who's being affiliated
@@ -63,13 +63,13 @@ static void affiliate(SocialGraph* SG, Node* child, Node* parent)
     List progeny = NULL;
 
     Node* ch = child;
-    listPush(&progeny, ch);
+    list_push(&progeny, ch);
 
     while (progeny)
     {
-        Node* cur = listPop(&progeny);
-        Node* m8 = socialIsMated(SG, cur);
-        struct nodeAttrib* naCur = cur->attribute;
+        Node* cur = list_pop(&progeny);
+        Node* m8 = social_is_mated(SG, cur);
+        struct NodeAttrib* naCur = cur->attribute;
 
         if (m8 == NULL || naChild->ID.sex == MALE)
         {
@@ -77,7 +77,7 @@ static void affiliate(SocialGraph* SG, Node* child, Node* parent)
 
             if (m8 != NULL)
             {
-                struct nodeAttrib* naWife = m8->attribute;
+                struct NodeAttrib* naWife = m8->attribute;
                 naWife->ID.lastName = naCur->ID.lastName;
             }
 
@@ -90,20 +90,20 @@ static void affiliate(SocialGraph* SG, Node* child, Node* parent)
         while (relations)
         {
             Edge* curEdge = relations->elem;
-            struct relationAttrib* ra = curEdge->attribute;
+            struct RelationAttrib* ra = curEdge->attribute;
 
             if (ra->familyRel == CHILD)
             {
                 Node* e = curEdge->to;
-                listPush(&progeny, e);
+                list_push(&progeny, e);
             }
 
             relations = relations->next;
         }
     }
 
-    struct relationAttrib childToParent;
-    struct relationAttrib parentToChild;
+    struct RelationAttrib childToParent;
+    struct RelationAttrib parentToChild;
 
     childToParent.familyRel = PARENT;
     childToParent.knowAbout = naParent->ID;
@@ -117,20 +117,20 @@ static void affiliate(SocialGraph* SG, Node* child, Node* parent)
     parentToChild.perc.attachment = 7 + rand()%4;
     parentToChild.perc.love = 0;
 
-    socialAddRelation(SG, child, parent, childToParent);
-    socialAddRelation(SG, parent, child, parentToChild);
+    social_add_relation(SG, child, parent, childToParent);
+    social_add_relation(SG, parent, child, parentToChild);
 }
 
-static void integrateInSiblings(SocialGraph* SG, Node* child, Node* parent)
+static void integrate_in_siblings(SocialGraph* SG, Node* child, Node* parent)
 {
     List l = parent->edges;
-    struct nodeAttrib* newSib = child->attribute;
+    struct NodeAttrib* newSib = child->attribute;
 
     /*We search every other child of the parent...*/
     while (l)
     {
         Edge* e = l->elem;
-        struct relationAttrib* ra = e->attribute;
+        struct RelationAttrib* ra = e->attribute;
 
         /*And when we find one we create a link with the new child*/
         if (ra->familyRel == CHILD)
@@ -138,11 +138,11 @@ static void integrateInSiblings(SocialGraph* SG, Node* child, Node* parent)
             int i = 0;
 
             Node* curSib = e->to;
-            struct nodeAttrib* curSibAttr = curSib->attribute;
+            struct NodeAttrib* curSibAttr = curSib->attribute;
 
             for (i = 0; i < 2; i++)
             {
-                struct relationAttrib newra;
+                struct RelationAttrib newra;
 
                 newra.familyRel = SIBLING;
                 newra.perc.allegiance = rand()%4;
@@ -152,12 +152,12 @@ static void integrateInSiblings(SocialGraph* SG, Node* child, Node* parent)
                 if (i)
                 {
                     newra.knowAbout = newSib->ID;
-                    socialAddRelation(SG, curSib, child, newra);
+                    social_add_relation(SG, curSib, child, newra);
                 }
                 else
                 {
                     newra.knowAbout = curSibAttr->ID;
-                    socialAddRelation(SG, child, curSib, newra);
+                    social_add_relation(SG, child, curSib, newra);
                 }
             }
         }
@@ -166,10 +166,10 @@ static void integrateInSiblings(SocialGraph* SG, Node* child, Node* parent)
     }
 }
 
-static int canBeParent(SocialGraph* SG, Node* child, Node* parent)
+static int can_be_parent(SocialGraph* SG, Node* child, Node* parent)
 {
-    struct nodeAttrib* naParent = parent->attribute;
-    struct nodeAttrib* naChild = child->attribute;
+    struct NodeAttrib* naParent = parent->attribute;
+    struct NodeAttrib* naChild = child->attribute;
 
     if (naParent->ID.age < 18)
         return 0;
@@ -183,7 +183,7 @@ static int canBeParent(SocialGraph* SG, Node* child, Node* parent)
     while (l)
     {
         Edge* e = l->elem;
-        struct relationAttrib* ra = e->attribute;
+        struct RelationAttrib* ra = e->attribute;
 
         /*If the node already has a parent...*/
         if (ra->familyRel == PARENT)
@@ -194,7 +194,7 @@ static int canBeParent(SocialGraph* SG, Node* child, Node* parent)
         l = l->next;
     }
 
-    Node* m8 = socialIsMated(SG, child);
+    Node* m8 = social_is_mated(SG, child);
 
     /*To avoid interbreeding...*/
     if (m8) /*If the child has a soulmate*/
@@ -205,7 +205,7 @@ static int canBeParent(SocialGraph* SG, Node* child, Node* parent)
         while (l)
         {
             Edge* e = l->elem;
-            struct relationAttrib* ra = e->attribute;
+            struct RelationAttrib* ra = e->attribute;
 
             /*If the current neighbour of the parent happens to be one of his/her child*/
             /*And if this child happens to be the soulmate of the current tested child...*/
@@ -221,23 +221,23 @@ static int canBeParent(SocialGraph* SG, Node* child, Node* parent)
     return 1;
 }
 
-static void generateFamiliesClbk(Node* child, void* socialGraph)
+static void generate_families_clbk(Node* child, void* socialGraph)
 {
     SocialGraph* SG = socialGraph;
-    struct nodeAttrib* na = child->attribute;
+    struct NodeAttrib* na = child->attribute;
     int affiliated = 0;
     int nbPeople = SG->G->nbNodes;
     int parentID = rand()%nbPeople;
 
     do
     {
-        Node* parent = vectorAt(SG->G->nodes, parentID);
+        Node* parent = vector_at(SG->G->nodes, parentID);
 
-        if (canBeParent(SG, child, parent))
+        if (can_be_parent(SG, child, parent))
         {
-            Node* m8 = socialIsMated(SG, parent);
+            Node* m8 = social_is_mated(SG, parent);
 
-            integrateInSiblings(SG, child, parent);
+            integrate_in_siblings(SG, child, parent);
             affiliate(SG, child, parent);
             affiliated = 1;
 
@@ -251,7 +251,7 @@ static void generateFamiliesClbk(Node* child, void* socialGraph)
     } while (na->ID.age <= 18 && !affiliated); /*That way there can't be any orphan child.*/
 }
 
-int generateFamilies(SocialGraph* SG)
+int generate_families(SocialGraph* SG)
 {
     printf("Creating couples...\n");
 
@@ -260,24 +260,24 @@ int generateFamilies(SocialGraph* SG)
     int nbPeople = SG->G->nbNodes;
     int pathIndex = 0;
 
-    randShuffle(SG->G->nodes);
+    rand_shuffle(SG->G->nodes);
 
     /*Creates couples*/
     /*TODO optimize this. Around 150,000 rejected solutions for 2500 couples...*/
     /*TODO make sure the loop actually stops at some point lol.*/
     while (count < nbPeople/4) /*About 50% of french population is in a relationship according to INSEE*/
     {
-        Node* j = vectorAt(SG->G->nodes, pathIndex%nbPeople);
-        Node* k = vectorAt(SG->G->nodes, rand()%nbPeople);
-        struct nodeAttrib* na1 = j->attribute;
-        struct nodeAttrib* na2 = k->attribute;
+        Node* j = vector_at(SG->G->nodes, pathIndex%nbPeople);
+        Node* k = vector_at(SG->G->nodes, rand()%nbPeople);
+        struct NodeAttrib* na1 = j->attribute;
+        struct NodeAttrib* na2 = k->attribute;
 
         /*A healthy family can only exist with a dad AND a mom :^)*/
-        if (na1->ID.sex != na2->ID.sex && abs(na1->ID.age - na2->ID.age) + randBinom(3) < 10
-                && na1->ID.age - randBinom(6) >= 18 && na2->ID.age - randBinom(6) >= 18
-                && socialIsMated(SG, j) == NULL && socialIsMated(SG, k) == NULL)
+        if (na1->ID.sex != na2->ID.sex && abs(na1->ID.age - na2->ID.age) + rand_binom(3) < 10
+                && na1->ID.age - rand_binom(6) >= 18 && na2->ID.age - rand_binom(6) >= 18
+                && social_is_mated(SG, j) == NULL && social_is_mated(SG, k) == NULL)
         {
-            createCouple(SG, k, j);
+            create_couple(SG, k, j);
             count++;
         }
         else
@@ -291,18 +291,18 @@ int generateFamilies(SocialGraph* SG)
 
     /*Creates families, ie associates some children with some parents according to a set of constraints*/
     /*There can be single parents*/
-    graphMapNodes(SG->G, generateFamiliesClbk, SG);
+    graph_map_nodes(SG->G, generate_families_clbk, SG);
 
     printf("Done\n");
 
     return count;
 }
 
-static void assignPositionClbk(Node* n, void* socialGraph)
+static void assign_position_clbk(Node* n, void* socialGraph)
 {
     SocialGraph* SG = socialGraph;
 
-    struct nodeAttrib* curNode = n->attribute;
+    struct NodeAttrib* curNode = n->attribute;
     int nbCommunities = SG->CM->communities->count;
 
     /*For each communities, we scan all the associated positions and find one that matches*/
@@ -313,20 +313,20 @@ static void assignPositionClbk(Node* n, void* socialGraph)
 
     for (i = 0; i < nbCommunities && !positionned; i++)
     {
-        struct community* curCom = vectorAt(SG->CM->communities, rand()%nbCommunities);
+        struct Community* curCom = vector_at(SG->CM->communities, rand()%nbCommunities);
 
         int j = 0;
 
         for (j = 0; j < curCom->nbPositions && !positionned; j++)
         {
-            struct position* curPos = &(curCom->positions[j]);
+            struct Position* curPos = &(curCom->positions[j]);
 
             if (curPos->people->count < curPos->nbPeople
                     && curNode->ID.age >= curPos->minAge
                     && curNode->ID.age <= curPos->maxAge)
             {
-                vectorPush(curPos->people, n);
-                vectorPush(curNode->positions, curPos);
+                vector_push(curPos->people, n);
+                vector_push(curNode->positions, curPos);
 
                 positionned = 1; /*Temporary*/
             }
@@ -334,16 +334,16 @@ static void assignPositionClbk(Node* n, void* socialGraph)
     }
 }
 
-int generateCommunities(SocialGraph* SG)
+int generate_communities(SocialGraph* SG)
 {
     printf("Starting communities generation...\n");
 
     printf("Assigning positions to nodes...\n");
 
     /*We shuffle the node vector to avoid any statistical bias*/
-    randShuffle(SG->G->nodes);
+    rand_shuffle(SG->G->nodes);
     /*We map the previous callback function to every node*/
-    graphMapNodes(SG->G, assignPositionClbk, SG);
+    graph_map_nodes(SG->G, assign_position_clbk, SG);
 
     return 0;
 }

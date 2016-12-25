@@ -5,8 +5,8 @@
 
 /*int generateNode(SocialGraph* SG);*/
 
-void generatePeople(SocialGraph* SG, int nb);
-int generateFamilies(SocialGraph* SG);
-int generateCommunities(SocialGraph* SG);
+void generate_people(SocialGraph* SG, int nb);
+int generate_families(SocialGraph* SG);
+int generate_communities(SocialGraph* SG);
 
 #endif

@@ -3,7 +3,7 @@
 
 #include "vector.h"
 
-Vector* vectorNew()
+Vector* vector_new()
 {
     Vector* vec = malloc(sizeof(Vector));
 
@@ -14,7 +14,7 @@ Vector* vectorNew()
     return vec;
 }
 
-void vectorPush(Vector* vec, void* elem)
+void vector_push(Vector* vec, void* elem)
 {
     if (vec->count >= vec->size)
     {
@@ -26,7 +26,7 @@ void vectorPush(Vector* vec, void* elem)
     vec->count ++;
 }
 
-void* vectorPop(Vector* vec)
+void* vector_pop(Vector* vec)
 {
     if (vec->count > 0)
     {
@@ -39,7 +39,7 @@ void* vectorPop(Vector* vec)
     }
 }
 
-void vectorMap(Vector vec, void (*mapfun)(void* elem, void* dataIn), void* data)
+void vector_map(Vector vec, void (*mapfun)(void* elem, void* dataIn), void* data)
 {
     int i = 0;
 
@@ -49,7 +49,7 @@ void vectorMap(Vector vec, void (*mapfun)(void* elem, void* dataIn), void* data)
     }
 }
 
-void* vectorAt(Vector* v, int i)
+void* vector_at(Vector* v, int i)
 {
     if (v)
     {
@@ -64,28 +64,28 @@ void* vectorAt(Vector* v, int i)
     }
 }
 
-static void vecFreeClbk(void* elem, void* data)
+static void free_clbk(void* elem, void* data)
 {
     free(elem);
 }
 
-void vectorFlush(Vector* vec)
+void vector_flush(Vector* vec)
 {
-    vectorMap(*vec, vecFreeClbk, NULL);
+    vector_map(*vec, free_clbk, NULL);
 }
 
-void vectorFree(Vector* vec)
+void vector_free(Vector* vec)
 {
     free(vec->data);
     free(vec);
 }
 
-static void printIntClbk(void* elem, void* data)
+static void print_int_clbk(void* elem, void* data)
 {
     printf("%d\n", *(int*)elem);
 }
 
-void printIntVector(Vector* v)
+void print_int_vector(Vector* v)
 {
-    vectorMap(*v, printIntClbk, NULL);
+    vector_map(*v, print_int_clbk, NULL);
 }

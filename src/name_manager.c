@@ -4,9 +4,22 @@
 
 #include "name_manager.h"
 
-struct nameManager* nameNewManager()
+struct NameRaceSelector
 {
-    struct nameManager* NM = malloc(sizeof(struct nameManager));
+    int start;
+    int nb;
+};
+
+struct NameManager
+{
+    struct NameRaceSelector selectors[2][20];
+    Vector* firstNames;
+    Vector* lastNames;
+};
+
+NameManager* name_new_manager()
+{
+    NameManager* NM = malloc(sizeof(NameManager));
 
     int i = 0;
 
@@ -18,13 +31,13 @@ struct nameManager* nameNewManager()
         NM->selectors[1][i].nb = -1;
     }
 
-    NM->firstNames = vectorNew();
-    NM->lastNames = vectorNew();
+    NM->firstNames = vector_new();
+    NM->lastNames = vector_new();
 
     return NM;
 }
 
-void nameLoadFromFile(struct nameManager* NM, char* fileName, int race, int sex, int FN)
+void name_load_from_file(NameManager* NM, char* fileName, int race, int sex, int FN)
 {
     Vector* target = (FN == 1 ? NM->firstNames : NM->lastNames);
 
@@ -41,7 +54,7 @@ void nameLoadFromFile(struct nameManager* NM, char* fileName, int race, int sex,
 
         /*To avoid valgrind annoying error of "cond jump depends on uninitialized value"*/
         strncpy(curName, "--------------------", 20);
-        vectorPush(target, curName);
+        vector_push(target, curName);
 
         res = fgets(curName, 20, f);
 
@@ -60,48 +73,48 @@ void nameLoadFromFile(struct nameManager* NM, char* fileName, int race, int sex,
 
     } while (res != NULL);
 
-    free(vectorPop(target)); /*The last element corresponds to an empty line so we don't want to keep it.*/
+    free(vector_pop(target)); /*The last element corresponds to an empty line so we don't want to keep it.*/
     count--;
     NM->selectors[FN][race*2 + sex].nb = count;
 
     fclose(f);
 }
 
-static void printNamesClbk(void* name, void* data)
+static void print_names_clbk(void* name, void* data)
 {
     printf("%s\n", (char*) name);
 }
 
-void namePrintAll(struct nameManager* NM, int race, int sex, int FN)
+void name_print_all(NameManager* NM, int race, int sex, int FN)
 {
     Vector* target = (FN == 1 ? NM->firstNames : NM->lastNames);
 
-    vectorMap(*target, printNamesClbk, NULL);
+    vector_map(*target, print_names_clbk, NULL);
 }
 
-char* nameGetFirstName(struct nameManager* NM, int ID)
+char* name_get_first_name(NameManager* NM, int ID)
 {
-    return vectorAt(NM->firstNames, ID);
+    return vector_at(NM->firstNames, ID);
 }
 
-char* nameGetLastName(struct nameManager* NM, int ID)
+char* name_get_last_name(NameManager* NM, int ID)
 {
-    return vectorAt(NM->lastNames, ID);
+    return vector_at(NM->lastNames, ID);
 }
 
-void nameRandName(struct nameManager* NM, int race, int sex, int* firstName, int* lastName)
+void name_rand_name(NameManager* NM, int race, int sex, int* firstName, int* lastName)
 {
     *firstName = NM->selectors[1][2*race + sex].start + rand() % NM->selectors[1][2*race + sex].nb;
     *lastName = NM->selectors[0][2*race + sex].start + rand() % NM->selectors[0][2*race + sex].nb;
 }
 
-void nameFreeManager(struct nameManager* NM)
+void name_free_manager(NameManager* NM)
 {
-    vectorFlush(NM->firstNames);
-    vectorFree(NM->firstNames);
+    vector_flush(NM->firstNames);
+    vector_free(NM->firstNames);
 
-    vectorFlush(NM->lastNames);
-    vectorFree(NM->lastNames);
+    vector_flush(NM->lastNames);
+    vector_free(NM->lastNames);
 
     free(NM);
 }

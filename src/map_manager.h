@@ -3,39 +3,39 @@
 
 #include "graph.h"
 
-enum placeType
+enum PlaceType
 {
     BUILDING = 0,
     STREET
 };
 
-struct mapNode
+struct MapNode
 {
     int ID;
-    enum placeType type;
+    enum PlaceType type;
     void* data;
 };
 
-struct mapBuilding
+struct MapBuilding
 {
     int number;
     int buildingType;
     int security;
 };
 
-struct mapStreet
+struct MapStreet
 {
     char name[25];
     int length;
 };
 
-struct mapManager
+typedef struct MapManager
 {
     Graph map;
-};
+} MapManager;
 
-struct mapManager* mapNewManager();
+MapManager* map_new_manager();
 
-void mapGenerate(struct mapManager* MM);
+void map_generate(MapManager* MM);
 
 #endif

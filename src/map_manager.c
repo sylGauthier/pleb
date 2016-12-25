@@ -4,11 +4,11 @@
 #include "map_manager.h"
 
 
-struct mapManager* mapNewManager()
+MapManager* map_new_manager()
 {
     return NULL;
 }
 
-void mapGenerate(struct mapManager* MM)
+void map_generate(struct MapManager* MM)
 {
 }

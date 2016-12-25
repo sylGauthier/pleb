@@ -7,17 +7,17 @@
 #include "community_manager.h"
 #include "rand_tools.h"
 
-struct communityManager* communityNewManager()
+CommunityManager* community_new_manager()
 {
-    struct communityManager* CM = malloc(sizeof(struct communityManager));
+    CommunityManager* CM = malloc(sizeof(CommunityManager));
 
-    CM->communities = vectorNew();
-    CM->templates = vectorNew();
+    CM->communities = vector_new();
+    CM->templates = vector_new();
 
     return CM;
 }
 
-static void parseDoubleArg(char* arg, int* n1, int* n2)
+static void parse_double_arg(char* arg, int* n1, int* n2)
 {
     char* end1 = arg;
     char* end2 = NULL;
@@ -35,18 +35,18 @@ static void parseDoubleArg(char* arg, int* n1, int* n2)
         *n2 = *n1;
 }
 
-static void parsePosition(xmlDocPtr doc, xmlNodePtr cur, struct communityTemplate* com, int positionIndex)
+static void parse_position(xmlDocPtr doc, xmlNodePtr cur, struct CommunityTemplate* com, int positionIndex)
 {
     xmlChar* attr = xmlGetProp(cur, (xmlChar*) "hierarchy");
     com->positions[positionIndex].hierarchy = strtol((char*) attr, NULL, 10);
     xmlFree(attr);
 
     attr = xmlGetProp(cur, (xmlChar*) "nbPeople");
-    parseDoubleArg((char*) attr, &(com->positions[positionIndex].nbPeopleMin), &(com->positions[positionIndex].nbPeopleMax));
+    parse_double_arg((char*) attr, &(com->positions[positionIndex].nbPeopleMin), &(com->positions[positionIndex].nbPeopleMax));
     xmlFree(attr);
 
     attr = xmlGetProp(cur, (xmlChar*) "salary");
-    parseDoubleArg((char*) attr, &(com->positions[positionIndex].salaryMin), &(com->positions[positionIndex].salaryMax));
+    parse_double_arg((char*) attr, &(com->positions[positionIndex].salaryMin), &(com->positions[positionIndex].salaryMax));
     xmlFree(attr);
 
     attr = xmlGetProp(cur, (xmlChar*) "minAge");
@@ -58,7 +58,7 @@ static void parsePosition(xmlDocPtr doc, xmlNodePtr cur, struct communityTemplat
     xmlFree(attr);
 
     attr = xmlGetProp(cur, (xmlChar*) "timeRatio");
-    parseDoubleArg((char*) attr, &(com->positions[positionIndex].timeRatioMin), &(com->positions[positionIndex].timeRatioMax));
+    parse_double_arg((char*) attr, &(com->positions[positionIndex].timeRatioMin), &(com->positions[positionIndex].timeRatioMax));
     xmlFree(attr);
 
     attr = xmlGetProp(cur, (xmlChar*) "name");
@@ -76,9 +76,9 @@ static void parsePosition(xmlDocPtr doc, xmlNodePtr cur, struct communityTemplat
     xmlFree(attr);
 }
 
-static void parseCommunity(xmlDocPtr doc, xmlNodePtr cur, struct communityManager* CM)
+static void parse_community(xmlDocPtr doc, xmlNodePtr cur, CommunityManager* CM)
 {
-    struct communityTemplate* newTemplate = malloc(sizeof(struct communityTemplate));
+    struct CommunityTemplate* newTemplate = malloc(sizeof(struct CommunityTemplate));
 
     newTemplate->quota = 0;
     newTemplate->number = 0;
@@ -107,7 +107,7 @@ static void parseCommunity(xmlDocPtr doc, xmlNodePtr cur, struct communityManage
     {
         if (!xmlStrcmp(cur->name, (xmlChar*) "position"))
         {
-            parsePosition(doc, cur, newTemplate, pn);
+            parse_position(doc, cur, newTemplate, pn);
             pn++;
         }
 
@@ -116,10 +116,10 @@ static void parseCommunity(xmlDocPtr doc, xmlNodePtr cur, struct communityManage
 
     newTemplate->nbPositions = pn;
 
-    vectorPush(CM->templates, newTemplate);
+    vector_push(CM->templates, newTemplate);
 }
 
-int communityLoadTemplatesFromFile(struct communityManager* CM, char* filename)
+int community_load_templates_from_file(CommunityManager* CM, char* filename)
 {
     xmlDocPtr doc;
     xmlNodePtr cur;
@@ -153,7 +153,7 @@ int communityLoadTemplatesFromFile(struct communityManager* CM, char* filename)
     while (cur != NULL)
     {
         if (!xmlStrcmp(cur->name, (xmlChar*) "community"))
-            parseCommunity(doc, cur, CM);
+            parse_community(doc, cur, CM);
 
         cur = cur->next;
     }
@@ -163,9 +163,9 @@ int communityLoadTemplatesFromFile(struct communityManager* CM, char* filename)
     return 1;
 }
 
-static void printTemplateClbk(void* elem, void* data)
+static void print_template_clbk(void* elem, void* data)
 {
-    struct communityTemplate* C = elem;
+    struct CommunityTemplate* C = elem;
 
     printf("Template: %s\n  - quota: %d\n  - nbPositions: %d\n", C->genericName, C->quota, C->nbPositions);
     printf("  - Positions:\n");
@@ -183,9 +183,9 @@ static void printTemplateClbk(void* elem, void* data)
     }
 }
 
-static void printCommunityClbk(void* elem, void* data)
+static void print_community_clbk(void* elem, void* data)
 {
-    struct community* C = elem;
+    struct Community* C = elem;
 
     printf("Community: %s\n - nbPositions: %d\n", C->specificName, C->nbPositions);
     printf("  - Positions:\n");
@@ -202,17 +202,17 @@ static void printCommunityClbk(void* elem, void* data)
     }
 }
 
-void communityPrintTemplates(struct communityManager* CM)
+void community_print_templates(CommunityManager* CM)
 {
-    vectorMap(*(CM->templates), printTemplateClbk, NULL);
+    vector_map(*(CM->templates), print_template_clbk, NULL);
 }
 
-void communityPrintCommunities(struct communityManager* CM)
+void community_print_communities(CommunityManager* CM)
 {
-    vectorMap(*(CM->communities), printCommunityClbk, NULL);
+    vector_map(*(CM->communities), print_community_clbk, NULL);
 }
 
-void communityGenerateFromTemplates(struct communityManager* CM, int nbPeople)
+void community_generate_from_templates(CommunityManager* CM, int nbPeople)
 {
     int i = 0;
     int communityID = 0;
@@ -220,7 +220,7 @@ void communityGenerateFromTemplates(struct communityManager* CM, int nbPeople)
 
     for (i = 0; i < CM->templates->count; i++)
     {
-        struct communityTemplate* curT = CM->templates->data[i];
+        struct CommunityTemplate* curT = CM->templates->data[i];
 
         int nbCom = 0;
 
@@ -236,7 +236,7 @@ void communityGenerateFromTemplates(struct communityManager* CM, int nbPeople)
 
         for (j = 0; j < nbCom; j++)
         {
-            struct community* newC = malloc(sizeof(struct community));
+            struct Community* newC = malloc(sizeof(struct Community));
 
             if (!newC)
             {
@@ -253,22 +253,22 @@ void communityGenerateFromTemplates(struct communityManager* CM, int nbPeople)
             {
                 newC->positions[k].communityID = communityID;
                 newC->positions[k].hierarchy = curT->positions[k].hierarchy;
-                newC->positions[k].nbPeople = randUniform(curT->positions[k].nbPeopleMin, curT->positions[k].nbPeopleMax);
-                newC->positions[k].salary = randUniform(curT->positions[k].salaryMin, curT->positions[k].salaryMax);
+                newC->positions[k].nbPeople = rand_uniform(curT->positions[k].nbPeopleMin, curT->positions[k].nbPeopleMax);
+                newC->positions[k].salary = rand_uniform(curT->positions[k].salaryMin, curT->positions[k].salaryMax);
                 newC->positions[k].minAge = curT->positions[k].minAge;
                 newC->positions[k].maxAge = curT->positions[k].maxAge;
-                newC->positions[k].timeRatio = randUniform(curT->positions[k].timeRatioMin, curT->positions[k].timeRatioMax);
+                newC->positions[k].timeRatio = rand_uniform(curT->positions[k].timeRatioMin, curT->positions[k].timeRatioMax);
                 strncpy(newC->positions[k].name, curT->positions[k].name, 25);
                 totPositions += newC->positions[k].nbPeople;
                 newC->positions[k].type = curT->positions[k].type;
 
-                newC->positions[k].people = vectorNew();
+                newC->positions[k].people = vector_new();
             }
 
             strncpy(newC->genericName, curT->genericName, 20);
             sprintf(newC->specificName, "%s%d", curT->genericName, j);
 
-            vectorPush(CM->communities, newC);
+            vector_push(CM->communities, newC);
             communityID++;
         }
     }
@@ -278,26 +278,26 @@ void communityGenerateFromTemplates(struct communityManager* CM, int nbPeople)
     printf("There are now %d positions for %d people in the network\n", totPositions, nbPeople);
 }
 
-static void freePosClbk(void* com, void* data)
+static void free_pos_clbk(void* com, void* data)
 {
-    struct community* cur = com;
+    struct Community* cur = com;
 
     int i = 0;
 
     for (i = 0; i < cur->nbPositions; i++)
     {
-        vectorFree(cur->positions[i].people);
+        vector_free(cur->positions[i].people);
     }
 }
 
-void communityFree(struct communityManager* CM)
+void community_free(CommunityManager* CM)
 {
-    vectorMap(*(CM->communities), freePosClbk, NULL);
-    vectorFlush(CM->communities);
-    vectorFlush(CM->templates);
+    vector_map(*(CM->communities), free_pos_clbk, NULL);
+    vector_flush(CM->communities);
+    vector_flush(CM->templates);
 
-    vectorFree(CM->communities);
-    vectorFree(CM->templates);
+    vector_free(CM->communities);
+    vector_free(CM->templates);
 
     free(CM);
 }

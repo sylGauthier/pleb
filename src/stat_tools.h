@@ -3,8 +3,8 @@
 
 #include "social_graph.h"
 
-int statCountOrphanKids(SocialGraph* SG);
-void printUnassignedPositions(SocialGraph* SG);
-int nbInactives(SocialGraph* SG, int minAge, int maxAge);
+int stat_count_orphan_kids(SocialGraph* SG);
+void print_unassigned_positions(SocialGraph* SG);
+int nb_inactives(SocialGraph* SG, int minAge, int maxAge);
 
 #endif

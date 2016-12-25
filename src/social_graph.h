@@ -5,7 +5,7 @@
 #include "name_manager.h"
 #include "community_manager.h"
 
-enum _familyLink_
+enum FamilyLink
 {
     NONE = 0,
     GRANDPARENT,
@@ -22,12 +22,12 @@ enum _familyLink_
 
 typedef struct SocialGraph
 {
-    struct nameManager* NM;
-    struct communityManager* CM;
+    NameManager* NM;
+    CommunityManager* CM;
     Graph* G;
 } SocialGraph;
 
-struct identity
+struct Identity
 {
     int firstName;
     int lastName;
@@ -39,48 +39,48 @@ struct identity
     int email;
 };
 
-struct personality
+struct Personality
 {
     int intelligence;
     int emotionality;
     int sexuality;
 };
 
-struct perception
+struct Perception
 {
     int allegiance;
     int attachment;
     int love;
 };
 
-struct nodeAttrib
+struct NodeAttrib
 {
     int nodeID;
-    struct identity ID;
-    struct personality pers;
+    struct Identity ID;
+    struct Personality pers;
     Vector* positions;
 };
 
-struct relationAttrib
+struct RelationAttrib
 {
     int edgeID;
     int familyRel;
-    struct identity knowAbout;
-    struct perception perc;
+    struct Identity knowAbout;
+    struct Perception perc;
 };
 
-SocialGraph* socialNew();
+SocialGraph* social_new();
 
-Node* socialAddNode(SocialGraph* SG, struct nodeAttrib);
-Edge* socialAddRelation(SocialGraph* SG, Node* fromPtr, Node* toPtr, struct relationAttrib);
+Node* social_add_node(SocialGraph* SG, struct NodeAttrib);
+Edge* social_add_relation(SocialGraph* SG, Node* fromPtr, Node* toPtr, struct RelationAttrib);
 
 /*Returns the ID of the soulmate or -1 if none*/
-Node* socialIsMated(SocialGraph* SG, Node* n);
+Node* social_is_mated(SocialGraph* SG, Node* n);
 
-void socialPrintPeople(SocialGraph* SG);
-void socialPrintNode(SocialGraph* SG, Node* node);
-void printAgePyramid(SocialGraph* SG);
+void social_print_people(SocialGraph* SG);
+void social_print_node(SocialGraph* SG, Node* node);
+void print_age_pyramid(SocialGraph* SG);
 
-void socialFree(SocialGraph* SG);
+void social_free(SocialGraph* SG);
 
 #endif

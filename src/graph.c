@@ -4,17 +4,17 @@
 #include "graph.h"
 #include "vector.h"
 
-Graph* graphNew()
+Graph* graph_new()
 {
     Graph* g = malloc(sizeof(Graph));
-    g->nodes = vectorNew();
+    g->nodes = vector_new();
     g->nbNodes = 0;
-    g->edges = vectorNew();
+    g->edges = vector_new();
     g->nbEdges = 0;
     return g;
 }
 
-Node* graphAddNode(Graph* g, void* attribute)
+Node* graph_add_node(Graph* g, void* attribute)
 {
     int n = g->nbNodes;
     Node* newNode = malloc(sizeof(Node));
@@ -22,13 +22,13 @@ Node* graphAddNode(Graph* g, void* attribute)
     newNode->edges = NULL;
     newNode->attribute = attribute;
 
-    vectorPush(g->nodes, newNode);
+    vector_push(g->nodes, newNode);
     g->nbNodes ++;
 
     return newNode;
 }
 
-Edge* graphAddEdge(Graph* g, Node* fromPtr, Node* toPtr, void* attribute)
+Edge* graph_add_edge(Graph* g, Node* fromPtr, Node* toPtr, void* attribute)
 {
     int eid = g->nbEdges;
     Edge* e = malloc(sizeof(Edge));
@@ -38,76 +38,76 @@ Edge* graphAddEdge(Graph* g, Node* fromPtr, Node* toPtr, void* attribute)
     e->to = toPtr;
     e->attribute = attribute;
 
-    listPush(&(fromPtr->edges), e);
+    list_push(&(fromPtr->edges), e);
 
-    vectorPush(g->edges, e);
+    vector_push(g->edges, e);
     g->nbEdges ++;
 
     return e;
 }
 
-Node* graphGetNodeByIndex(Graph* g, int idx)
+Node* graph_get_node_by_index(Graph* g, int idx)
 {
     if (idx >= 0 && idx < g->nbNodes)
-        return vectorAt(g->nodes, idx);
+        return vector_at(g->nodes, idx);
     else
         return NULL;
 }
 
-struct mapNodePackage
+struct MapNodePackage
 {
     void (*mapfun)(Node* node, void* dataIN);
     void* data;
 };
 
-struct mapEdgePackage
+struct MapEdgePackage
 {
     void (*mapfun)(Edge* edge, void* dataIN);
     void* data;
 };
 
-void mapNodeCallback(void* elem, void* data)
+void map_node_clbk(void* elem, void* data)
 {
-    struct mapNodePackage* pkg = data;
+    struct MapNodePackage* pkg = data;
 
     pkg->mapfun((Node*) elem, pkg->data);
 }
 
-void mapEdgeCallback(void* elem, void* data)
+void map_edge_clbk(void* elem, void* data)
 {
-    struct mapEdgePackage* pkg = data;
+    struct MapEdgePackage* pkg = data;
 
     pkg->mapfun((Edge*) elem, pkg->data);
 }
 
-void graphMapNodes(Graph* g, void (*mapfun)(Node* node, void* dataIN), void* data)
+void graph_map_nodes(Graph* g, void (*mapfun)(Node* node, void* dataIN), void* data)
 {
-    struct mapNodePackage pkg;
+    struct MapNodePackage pkg;
     pkg.mapfun = mapfun;
     pkg.data = data;
-    vectorMap(*g->nodes, mapNodeCallback, &pkg);
+    vector_map(*g->nodes, map_node_clbk, &pkg);
 }
 
-void graphMapEdges(Graph* g, void (*mapfun)(Edge* edge, void* dataIN), void* data)
+void graph_map_edges(Graph* g, void (*mapfun)(Edge* edge, void* dataIN), void* data)
 {
-    struct mapEdgePackage pkg;
+    struct MapEdgePackage pkg;
     pkg.mapfun = mapfun;
     pkg.data = data;
-    vectorMap(*g->edges, mapEdgeCallback, &pkg);
+    vector_map(*g->edges, map_edge_clbk, &pkg);
 }
 
-static void freeNodeClbk(Node* node, void* data)
+static void free_node_clbk(Node* node, void* data)
 {
-    listFlush(node->edges);
-    listFree(&node->edges);
+    list_flush(node->edges);
+    list_free(&node->edges);
     free(node);
 }
 
-void graphFree(Graph* g)
+void graph_free(Graph* g)
 {
-    graphMapNodes(g, freeNodeClbk, NULL);
-    vectorFree(g->nodes);
-    vectorFree(g->edges);
+    graph_map_nodes(g, free_node_clbk, NULL);
+    vector_free(g->nodes);
+    vector_free(g->edges);
 
     free(g);
 }

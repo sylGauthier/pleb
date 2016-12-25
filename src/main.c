@@ -10,21 +10,21 @@
 int main()
 {
     int nbPeople = 100000;
-    SocialGraph* SG = socialNew();
+    SocialGraph* SG = social_new();
 
-    communityLoadTemplatesFromFile(SG->CM, "data/plop.xml");
-    communityGenerateFromTemplates(SG->CM, nbPeople);
+    community_load_templates_from_file(SG->CM, "data/plop.xml");
+    community_generate_from_templates(SG->CM, nbPeople);
 
-    nameLoadFromFile(SG->NM, "data/firstNamesFRFemales.txt", FRENCH, FEMALE, FIRST_NAME);
-    nameLoadFromFile(SG->NM, "data/firstNamesFRMales.txt", FRENCH, MALE, FIRST_NAME);
-    nameLoadFromFile(SG->NM, "data/lastNamesFR.txt", FRENCH, FEMALE, LAST_NAME);
-    nameLoadFromFile(SG->NM, "data/lastNamesFR.txt", FRENCH, MALE, LAST_NAME);
+    name_load_from_file(SG->NM, "data/firstNamesFRFemales.txt", FRENCH, FEMALE, FIRST_NAME);
+    name_load_from_file(SG->NM, "data/firstNamesFRMales.txt", FRENCH, MALE, FIRST_NAME);
+    name_load_from_file(SG->NM, "data/lastNamesFR.txt", FRENCH, FEMALE, LAST_NAME);
+    name_load_from_file(SG->NM, "data/lastNamesFR.txt", FRENCH, MALE, LAST_NAME);
 
-    generatePeople(SG, nbPeople);
+    generate_people(SG, nbPeople);
 
-    printf("Generated %d couples out of %d people\n", generateFamilies(SG), nbPeople);
+    printf("Generated %d couples out of %d people\n", generate_families(SG), nbPeople);
 
-    generateCommunities(SG);
+    generate_communities(SG);
 
     int i = 0;
 
@@ -37,12 +37,12 @@ int main()
     
     for (i = 0; i < 100; i += 4)
     {
-        printf("Inactive people (%d-%d y.o): %d\n", i, i+3, nbInactives(SG, i, i+3));
+        printf("Inactive people (%d-%d y.o): %d\n", i, i+3, nb_inactives(SG, i, i+3));
     }
 
-    printUnassignedPositions(SG);
+    print_unassigned_positions(SG);
 
-    socialFree(SG);
+    social_free(SG);
 
     return 0;
 }

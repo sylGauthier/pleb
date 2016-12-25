@@ -12,17 +12,17 @@ struct Vector
 
 typedef struct Vector Vector;
 
-Vector* vectorNew();
-void vectorPush(Vector*, void*);
-void* vectorPop(Vector*);
-void vectorMap(Vector vec, void (*mapfun)(void* elem, void* dataIn), void* data);
+Vector* vector_new();
+void vector_push(Vector*, void*);
+void* vector_pop(Vector*);
+void vector_map(Vector vec, void (*mapfun)(void* elem, void* dataIn), void* data);
 
-void* vectorAt(Vector*, int);
+void* vector_at(Vector*, int);
 
-void vectorFlush(Vector*);
-void vectorFree(Vector*);
+void vector_flush(Vector*);
+void vector_free(Vector*);
 
 
-void printIntVector(Vector*);
+void print_int_vector(Vector*);
 
 #endif
