@@ -4,6 +4,7 @@
 #include "graph.h"
 #include "name_manager.h"
 #include "community_manager.h"
+#include "map_manager.h"
 
 enum FamilyLink
 {
@@ -24,6 +25,7 @@ typedef struct SocialGraph
 {
     NameManager* NM;
     CommunityManager* CM;
+    MapManager* MM;
     Graph* G;
 } SocialGraph;
 

@@ -2,6 +2,7 @@
 #define COMMUNITY_MANAGER_H
 
 #include "vector.h"
+#include "map_manager.h"
 
 struct Position
 {

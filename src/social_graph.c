@@ -11,6 +11,7 @@ SocialGraph* social_new()
 
     sg->NM = name_new_manager();
     sg->CM = community_new_manager();
+    sg->MM = map_new_manager();
 
     return sg;
 }
@@ -188,8 +189,12 @@ void social_free(SocialGraph* sg)
     printf("  ->Freeing graph...\n");
     graph_free(sg->G);
     
+    printf("  ->Freeing names...\n");
     name_free_manager(sg->NM);
+    printf("  ->Freeing communities...\n");
     community_free(sg->CM);
+    printf("  ->Freeing map...\n");
+    map_free_manager(sg->MM);
 
     free(sg);
     printf("Done\n");

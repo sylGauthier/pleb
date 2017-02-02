@@ -25,17 +25,16 @@ struct MapBuilding
 
 struct MapStreet
 {
-    char name[25];
+    char* name;
     int length;
 };
 
 typedef struct MapManager
 {
-    Graph map;
+    Graph* map;
 } MapManager;
 
 MapManager* map_new_manager();
 
-void map_generate(MapManager* MM);
-
+void map_free_manager(MapManager* MM);
 #endif

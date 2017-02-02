@@ -3,6 +3,7 @@
 
 #include "social_graph.h"
 #include "social_generation.h"
+#include "map_generation.h"
 #include "save_graph.h"
 #include "stat_tools.h"
 #include "rand_tools.h"
@@ -25,6 +26,7 @@ int main()
     printf("Generated %d couples out of %d people\n", generate_families(SG), nbPeople);
 
     generate_communities(SG);
+    generate_map(SG);
 
     int i = 0;
 
