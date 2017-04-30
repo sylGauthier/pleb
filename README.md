@@ -2,7 +2,7 @@
 A random social network generator, with randomly generated nodes and edges attributes.
 
 A quick description of the algortihm
-=====
+=
 
 1. Generates a fixed number of independant nodes, with random attributes according to different
 statistical laws (e.g age distribution), names and surname picked from external files.
