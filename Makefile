@@ -2,7 +2,7 @@ NAME := $(shell pwd | rev | cut -d/ -f 1 | rev)
 BUILD := build
 PREFIX :=
 DEPS := libxml-2.0
-CFLAGS := -g -Wall -std=c89 $(shell pkg-config --cflags $(DEPS)) -c
+CFLAGS := -g -Wall -pedantic -std=c89 $(shell pkg-config --cflags $(DEPS)) -c
 LDFLAGS := $(shell pkg-config --libs $(DEPS))
 
 SOURCES := $(wildcard src/*.c)

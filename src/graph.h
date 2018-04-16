@@ -4,23 +4,20 @@
 #include "vector.h"
 #include "list.h"
 
-typedef struct Graph
-{
+typedef struct Graph {
     int nbNodes;
     int nbEdges;
     Vector* nodes;
     Vector* edges;
 } Graph;
 
-typedef struct Node
-{
+typedef struct Node {
     int ID;
     List edges;
     void* attribute;
 } Node;
 
-typedef struct Edge
-{
+typedef struct Edge {
     int ID;
     struct Node* from;
     struct Node* to;

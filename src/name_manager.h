@@ -6,14 +6,12 @@
 #define FIRST_NAME 1
 #define LAST_NAME 0
 
-enum Sex
-{
+enum Sex {
     MALE = 0,
     FEMALE
 };
 
-enum Race
-{
+enum Race {
     FRENCH = 0,
     ARAB,
     JEW

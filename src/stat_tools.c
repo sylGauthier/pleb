@@ -2,24 +2,20 @@
 
 #include "stat_tools.h"
 
-static void count_orphans_clbk(Node* curNode, void* cpt)
-{
+static void count_orphans_clbk(Node* curNode, void* cpt) {
     int* c = cpt;
     struct NodeAttrib* na = curNode->attribute;
 
-    if (na->ID.age <= 18)
-    {
+    if (na->ID.age <= 18) {
         List l = curNode->edges;
 
         (*c)++;
 
-        while (l)
-        {
+        while (l) {
             Edge* e = l->elem;
             struct RelationAttrib* ra = e->attribute;
 
-            if (ra->familyRel == PARENT)
-            {
+            if (ra->familyRel == PARENT) {
                 (*c)--;
                 break;
             }
@@ -29,48 +25,41 @@ static void count_orphans_clbk(Node* curNode, void* cpt)
     }
 }
 
-int stat_count_orphan_kids(SocialGraph* SG)
-{
+int stat_count_orphan_kids(SocialGraph* SG) {
     int c = 0;
+
     graph_map_nodes(SG->G,count_orphans_clbk, &c);
     return c;
 }
 
-void print_unassigned_positions(SocialGraph* SG)
-{
-    printf("Printing unassigned positions...\n");
+void print_unassigned_positions(SocialGraph* SG) {
     int i = 0;
 
-    for (i = 0; i < SG->CM->communities->count; i++)
-    {
-        struct Community* curCom = vector_at(SG->CM->communities, i);
+    printf("Printing unassigned positions...\n");
 
+    for (i = 0; i < SG->CM->communities->count; i++) {
+        struct Community* curCom = vector_at(SG->CM->communities, i);
         int j = 0;
 
-        for (j = 0; j < curCom->nbPositions; j++)
-        {
+        for (j = 0; j < curCom->nbPositions; j++) {
             struct Position curPos = curCom->positions[j];
 
-            /*printf("Position: %s in community %s, %d people\n", curPos.name, curCom->genericName, curPos.people->count);*/
-
-            if (curPos.people->count < curPos.nbPeople)
-            {
+            if (curPos.people->count < curPos.nbPeople) {
                 printf("Unassigned position: %s in community %s (%d/%d)\n",
-                        curPos.name, curCom->genericName, curPos.people->count, curPos.nbPeople);
+                        curPos.name, curCom->genericName, curPos.people->count,
+                        curPos.nbPeople);
             }
         }
     }
 }
 
-struct CountInactivesClbkData
-{
+struct CountInactivesClbkData {
     int* cpt;
     int minAge;
     int maxAge;
 };
 
-static void count_inactives_clbk(Node* curNode, void* data)
-{
+static void count_inactives_clbk(Node* curNode, void* data) {
     struct NodeAttrib* na = curNode->attribute;
     struct CountInactivesClbkData* d = data;
 
@@ -78,8 +67,7 @@ static void count_inactives_clbk(Node* curNode, void* data)
         *(d->cpt) = *(d->cpt) + 1;
 }
 
-int nb_inactives(SocialGraph* SG, int minAge, int maxAge)
-{
+int nb_inactives(SocialGraph* SG, int minAge, int maxAge) {
     int cpt = 0;
     struct CountInactivesClbkData data;
 

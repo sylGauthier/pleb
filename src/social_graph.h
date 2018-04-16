@@ -6,8 +6,7 @@
 #include "community_manager.h"
 #include "map_manager.h"
 
-enum FamilyLink
-{
+enum FamilyLink {
     NONE = 0,
     GRANDPARENT,
     PARENT,
@@ -21,16 +20,14 @@ enum FamilyLink
 };
 
 
-typedef struct SocialGraph
-{
+typedef struct SocialGraph {
     NameManager* NM;
     CommunityManager* CM;
     MapManager* MM;
     Graph* G;
 } SocialGraph;
 
-struct Identity
-{
+struct Identity {
     int firstName;
     int lastName;
     int familyID;
@@ -41,30 +38,26 @@ struct Identity
     int email;
 };
 
-struct Personality
-{
+struct Personality {
     int intelligence;
     int emotionality;
     int sexuality;
 };
 
-struct Perception
-{
+struct Perception {
     int allegiance;
     int attachment;
     int love;
 };
 
-struct NodeAttrib
-{
+struct NodeAttrib {
     int nodeID;
     struct Identity ID;
     struct Personality pers;
     Vector* positions;
 };
 
-struct RelationAttrib
-{
+struct RelationAttrib {
     int edgeID;
     int familyRel;
     struct Identity knowAbout;

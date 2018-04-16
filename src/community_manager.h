@@ -4,8 +4,7 @@
 #include "vector.h"
 #include "map_manager.h"
 
-struct Position
-{
+struct Position {
     int communityID;
     int hierarchy;
     int nbPeople;
@@ -23,8 +22,7 @@ struct Position
     int type;
 };
 
-struct PositionTemplate
-{
+struct PositionTemplate {
     int hierarchy;
     int nbPeopleMax, nbPeopleMin;
     int salaryMax, salaryMin;
@@ -41,14 +39,12 @@ struct PositionTemplate
     int type;
 };
 
-enum PositionType
-{
+enum PositionType {
     WORK = 0,
     LEISURE
 };
 
-struct Community
-{
+struct Community {
     int ID;
 
     int nbPositions;
@@ -58,8 +54,7 @@ struct Community
     char specificName[20];
 };
 
-struct CommunityTemplate
-{
+struct CommunityTemplate {
     int nbPositions;
     struct PositionTemplate positions[20];
 
@@ -72,8 +67,7 @@ struct CommunityTemplate
     int number;
 };
 
-typedef struct CommunityManager
-{
+typedef struct CommunityManager {
     int nbPositions;
     Vector* communities;
     Vector* templates;

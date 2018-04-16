@@ -3,8 +3,7 @@
 
 #define CHUNK_SIZE 200
 
-struct Vector
-{
+struct Vector {
     int size;
     int count;
     void** data;

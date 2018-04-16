@@ -4,20 +4,31 @@
 #include "graph.h"
 #include "vector.h"
 
-Graph* graph_new()
-{
-    Graph* g = malloc(sizeof(Graph));
+Graph* graph_new() {
+    Graph* g = NULL;
+    
+    if (!(g = malloc(sizeof(Graph)))) {
+        fprintf(stderr, "Error: Graph: could not allocate memory\n");
+        return NULL;
+    }
+
     g->nodes = vector_new();
     g->nbNodes = 0;
     g->edges = vector_new();
     g->nbEdges = 0;
+
     return g;
 }
 
-Node* graph_add_node(Graph* g, void* attribute)
-{
+Node* graph_add_node(Graph* g, void* attribute) {
     int n = g->nbNodes;
-    Node* newNode = malloc(sizeof(Node));
+    Node* newNode = NULL;
+    
+    if (!(newNode = malloc(sizeof(Node)))) {
+        fprintf(stderr, "Error: Graph: could not allocate memory for new node\n");
+        return NULL;
+    }
+
     newNode->ID = n;
     newNode->edges = NULL;
     newNode->attribute = attribute;
@@ -28,10 +39,14 @@ Node* graph_add_node(Graph* g, void* attribute)
     return newNode;
 }
 
-Edge* graph_add_edge(Graph* g, Node* fromPtr, Node* toPtr, void* attribute)
-{
+Edge* graph_add_edge(Graph* g, Node* fromPtr, Node* toPtr, void* attribute) {
     int eid = g->nbEdges;
-    Edge* e = malloc(sizeof(Edge));
+    Edge* e = NULL;
+    
+    if (!(e = malloc(sizeof(Edge)))) {
+        fprintf(stderr, "Error: Graph: could not allocate memory for new edge\n");
+        return NULL;
+    }
 
     e->ID = eid;
     e->from = fromPtr;
@@ -39,72 +54,64 @@ Edge* graph_add_edge(Graph* g, Node* fromPtr, Node* toPtr, void* attribute)
     e->attribute = attribute;
 
     list_push(&(fromPtr->edges), e);
-
     vector_push(g->edges, e);
     g->nbEdges ++;
 
     return e;
 }
 
-Node* graph_get_node_by_index(Graph* g, int idx)
-{
+Node* graph_get_node_by_index(Graph* g, int idx) {
     if (idx >= 0 && idx < g->nbNodes)
         return vector_at(g->nodes, idx);
     else
         return NULL;
 }
 
-struct MapNodePackage
-{
+struct MapNodePackage {
     void (*mapfun)(Node* node, void* dataIN);
     void* data;
 };
 
-struct MapEdgePackage
-{
+struct MapEdgePackage {
     void (*mapfun)(Edge* edge, void* dataIN);
     void* data;
 };
 
-void map_node_clbk(void* elem, void* data)
-{
+void map_node_clbk(void* elem, void* data) {
     struct MapNodePackage* pkg = data;
 
     pkg->mapfun((Node*) elem, pkg->data);
 }
 
-void map_edge_clbk(void* elem, void* data)
-{
+void map_edge_clbk(void* elem, void* data) {
     struct MapEdgePackage* pkg = data;
 
     pkg->mapfun((Edge*) elem, pkg->data);
 }
 
-void graph_map_nodes(Graph* g, void (*mapfun)(Node* node, void* dataIN), void* data)
-{
+void graph_map_nodes(Graph* g, void (*mapfun)(Node* node, void* dataIN), void* data) {
     struct MapNodePackage pkg;
+
     pkg.mapfun = mapfun;
     pkg.data = data;
     vector_map(*g->nodes, map_node_clbk, &pkg);
 }
 
-void graph_map_edges(Graph* g, void (*mapfun)(Edge* edge, void* dataIN), void* data)
-{
+void graph_map_edges(Graph* g, void (*mapfun)(Edge* edge, void* dataIN), void* data) {
     struct MapEdgePackage pkg;
+
     pkg.mapfun = mapfun;
     pkg.data = data;
     vector_map(*g->edges, map_edge_clbk, &pkg);
 }
 
-static void free_node_clbk(Node* node, void* data)
-{
+static void free_node_clbk(Node* node, void* data) {
     list_flush(node->edges);
     list_free(&node->edges);
     free(node);
 }
 
-void graph_free(Graph* g)
-{
+void graph_free(Graph* g) {
     graph_map_nodes(g, free_node_clbk, NULL);
     vector_free(g->nodes);
     vector_free(g->edges);
