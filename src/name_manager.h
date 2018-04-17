@@ -12,9 +12,7 @@ enum Sex {
 };
 
 enum Race {
-    FRENCH = 0,
-    ARAB,
-    JEW
+    FRENCH = 0
 };
 
 typedef struct NameManager NameManager;
